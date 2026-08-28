@@ -4,126 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#F4EBDD">
-    <meta name="description" content="A read-only Firebase CLI preflight for project identity, credentials, emulators, rules, and cloud reachability.">
+    <meta name="description" content="Check the Firebase project, sign-in, emulators, and rules files before a deploy.">
+    <link rel="canonical" href="https://firebase-environment-doctor.sociobot.in/">
     <link rel="icon" href="/assets/favicon-3f649a5a.svg" type="image/svg+xml">
-    <title>Firebase Environment Doctor — Know your target before you debug</title>
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon-180-4e2e0d9f.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Firebase Environment Doctor — Check Firebase projects">
+    <meta property="og:description" content="Check the Firebase project, sign-in, emulators, and rules files before a deploy.">
+    <meta property="og:url" content="https://firebase-environment-doctor.sociobot.in/">
+    <meta property="og:image" content="https://firebase-environment-doctor.sociobot.in/assets/doctor-share-1200-3f5aa21c.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Firebase Environment Doctor — Check Firebase projects">
+    <meta name="twitter:description" content="Check the Firebase project, sign-in, emulators, and rules files before a deploy.">
+    <meta name="twitter:image" content="https://firebase-environment-doctor.sociobot.in/assets/doctor-share-1200-3f5aa21c.webp">
+    <title>Firebase Environment Doctor — Check Firebase projects</title>
   </head>
-  <body>
+  <body data-route="Home">
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="shell site-header">
-      <a class="brand" href="/" aria-label="Firebase Environment Doctor home">
-        <span class="brand-mark" aria-hidden="true">✓</span>
-        <span>Firebase Environment Doctor</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a href="#checks">Checks</a>
-        <a href="#demo">Try the demo</a>
-        <a href="#install">Install</a>
-      </nav>
+      <a class="brand" href="/" aria-label="Firebase Environment Doctor home"><span class="brand-mark" aria-hidden="true">✓</span><span>Firebase Environment Doctor</span></a>
+      <nav aria-label="Primary navigation"><a href="/demo/">Demo</a><a href="#checks">What it checks</a><a href="#install">Install</a><a href="/privacy/">Privacy</a></nav>
     </header>
-
+    <p class="route-status" aria-live="polite" data-route-announcement></p>
     <main id="main" tabindex="-1">
       <section class="shell hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Read-only terminal preflight</p>
-          <h1 id="hero-title">Know the target before you debug.</h1>
-          <p class="lede">One local command checks the active Firebase project, credential state, emulator endpoints, rules hashes, and CLI reachability—before a write command gets the chance.</p>
-          <div class="actions">
-            <a class="button" href="#install">Install the doctor</a>
-            <a class="button secondary" href="#demo">Run a sample diagnosis</a>
-          </div>
-          <ul class="trust-line" aria-label="Safety guarantees">
-            <li>Offline by default</li>
-            <li>Never prints tokens</li>
-            <li>Never deploys</li>
-          </ul>
+          <p class="eyebrow">Firebase project check</p>
+          <h1 id="hero-title">Check your Firebase project before a deploy.</h1>
+          <p class="lede">For Firebase developers who need to catch a wrong project, login, emulator, or rules file before changing cloud data.</p>
+          <div class="actions"><a class="button" href="/demo/?demo=1">Try sample project check</a><span class="action-note">Shows a wrong-project result in this browser.</span><a class="button secondary" href="#install">Install the CLI</a></div>
+          <ul class="trust-line" aria-label="Checked product boundaries"><li>Runs locally by default</li><li>Hides credential values</li><li>Does not deploy</li></ul>
         </div>
-        <figure class="diorama">
-          <picture>
-            <source media="(max-width: 600px)" srcset="/assets/doctor-diorama-768-7fadba32.webp" type="image/webp">
-            <img src="/assets/doctor-diorama-dfb324dc.webp" width="1280" height="853" fetchpriority="high" alt="Paper-cut terminal inspection bench connecting separate cloud, local emulator, and security rules stations">
-          </picture>
-          <figcaption>Inspect first. Debug second.</figcaption>
-        </figure>
+        <figure class="diorama"><picture><source media="(max-width: 600px)" srcset="/assets/doctor-diorama-768-7fadba32.webp" type="image/webp"><img src="/assets/doctor-diorama-dfb324dc.webp" width="1280" height="853" fetchpriority="high" alt="Paper-cut terminal inspection bench connecting separate cloud, local emulator, and security rules stations"></picture><figcaption>Check before changing cloud data.</figcaption></figure>
       </section>
-
-      <aside class="safety-strip" aria-label="Product boundaries">
-        <ul class="shell safety-list">
-          <li><strong>Local first</strong><span>Reads Firebase project files without sending them anywhere.</span></li>
-          <li><strong>Explicit network opt-in</strong><span>Cloud checks run only with <code>--network</code>.</span></li>
-          <li><strong>Shareable, not secret</strong><span>Stable JSON and cards omit credential values.</span></li>
-        </ul>
-      </aside>
-
-      <section class="shell section" id="demo" aria-labelledby="demo-title">
-        <div class="section-heading">
-          <p class="eyebrow">Recorded fixture bench</p>
-          <h2 id="demo-title">See the failure before it costs you.</h2>
-          <p>These are the exact root categories covered by the CLI test fixtures. The browser demo is local and makes no requests.</p>
-        </div>
-        <div class="demo-grid">
-          <div>
-            <div class="case-tabs" role="tablist" aria-label="Diagnostic examples">
-              <button type="button" role="tab" aria-selected="true" aria-controls="demo-output" id="tab-wrong" data-demo-case="wrong-project">Wrong project</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="demo-output" id="tab-login" data-demo-case="expired-login" tabindex="-1">Expired login</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="demo-output" id="tab-emulator" data-demo-case="emulator-mismatch" tabindex="-1">Emulator mismatch</button>
-            </div>
-            <p class="fixture-note">Use Tab to enter, then ← and → to change cases.</p>
-          </div>
-          <div class="terminal-wrap">
-            <div class="terminal-bar"><span>doctor / fixture</span><span class="terminal-dots" aria-hidden="true">● ● ●</span></div>
-            <pre class="terminal" id="demo-output" role="tabpanel" aria-labelledby="tab-wrong" data-demo-output aria-busy="false"></pre>
-            <p class="demo-status" data-demo-status aria-live="polite"></p>
-          </div>
-        </div>
-      </section>
-
-      <section class="shell section" id="checks" aria-labelledby="checks-title">
-        <div class="section-heading">
-          <p class="eyebrow">Five checks, one answer</p>
-          <h2 id="checks-title">A small surface for a messy environment.</h2>
-          <p>The doctor uses the configuration already in your repository and documented Firebase CLI surfaces. It does not try to repair or reinterpret your setup.</p>
-        </div>
-        <ol class="checks">
-          <li><span class="check-index">01 / IDENTITY</span><h3>Project</h3><p>Resolves flags, environment variables, aliases, and the default project.</p></li>
-          <li><span class="check-index">02 / ACCESS</span><h3>Auth</h3><p>Finds local credential markers, then validates only when you opt in.</p></li>
-          <li><span class="check-index">03 / ROUTING</span><h3>Emulators</h3><p>Compares environment endpoints with ports declared in firebase.json.</p></li>
-          <li><span class="check-index">04 / POLICY</span><h3>Rules</h3><p>Verifies configured files and fingerprints each one with SHA-256.</p></li>
-          <li><span class="check-index">05 / REACH</span><h3>CLI</h3><p>Checks the Firebase binary locally and project visibility on request.</p></li>
-        </ol>
-      </section>
-
-      <section class="shell section" id="install" aria-labelledby="install-title">
-        <div class="install-sheet">
-          <div>
-            <p class="eyebrow">Version 0.1.0</p>
-            <h2 id="install-title">Put the check beside the code.</h2>
-            <p>Build the single binary with Rust today. Release downloads can be attached by the factory without changing the command surface.</p>
-          </div>
-          <div>
-            <div class="command">
-              <code data-install-command tabindex="0" aria-label="Install command; scroll to read the full command">cargo install --git https://github.com/B-Divyesh/sf-firebase-environment-doctor</code>
-              <button class="button" type="button" data-copy="cargo install --git https://github.com/B-Divyesh/sf-firebase-environment-doctor">Copy install command</button>
-            </div>
-            <p class="small-note">Then run <code>firebase-environment-doctor</code> from your Firebase project. Add <code>--json</code> for automation or <code>--network</code> for explicit account validation.</p>
-            <ul class="code-list" aria-label="Exit codes">
-              <li><code>0</code><span>Usable environment</span></li>
-              <li><code>1</code><span>Blocked, or caution with <code>--strict</code></span></li>
-              <li><code>2</code><span>Invalid invocation or unreadable input</span></li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <aside class="safety-strip" aria-label="Product boundaries"><ul class="shell safety-list"><li><strong>Your files stay on your computer</strong><span>The default check reads project files without a network request.</span></li><li><strong>Cloud check only when you ask</strong><span><code>--network</code> runs read-only Firebase account and project checks.</span></li><li><strong>Reports hide credentials</strong><span>Cards and JSON omit credential values.</span></li></ul></aside>
+      <section class="shell section" id="checks" aria-labelledby="checks-title"><div class="section-heading"><p class="eyebrow">What it checks</p><h2 id="checks-title">Check five Firebase settings.</h2><p>The tool reads your project files and Firebase CLI results. It tells you what to check next.</p></div><ol class="checks"><li><span class="check-index">01 / PROJECT</span><h3>Selected project</h3><p>Finds the project chosen by your command, environment, or project file.</p></li><li><span class="check-index">02 / SIGN-IN</span><h3>Firebase access</h3><p>Checks local sign-in details. With <code>--network</code>, it checks Firebase access.</p></li><li><span class="check-index">03 / EMULATORS</span><h3>Addresses</h3><p>Compares emulator addresses with <code>firebase.json</code>.</p></li><li><span class="check-index">04 / RULES</span><h3>Rules files</h3><p>Checks that configured rules files exist.</p></li><li><span class="check-index">05 / FIREBASE CLI</span><h3>Local tool</h3><p>Checks Firebase is installed. With <code>--network</code>, it checks project access.</p></li></ol></section>
+      <section class="shell section" id="install" aria-labelledby="install-title"><div class="install-sheet"><div><p class="eyebrow">Install</p><h2 id="install-title">Install the Firebase project check.</h2><p>Build it from this project source, then run it from a Firebase project directory.</p></div><div><div class="command"><code data-install-command tabindex="0" aria-label="Install command; scroll to read the full command">cargo install --git https://github.com/B-Divyesh/sf-firebase-environment-doctor</code><button class="button" type="button" data-copy="cargo install --git https://github.com/B-Divyesh/sf-firebase-environment-doctor">Copy install command</button></div><p class="small-note">Use <code>--json</code> for scripts. Use <code>--network</code> to check Firebase access. Use <code>--demo</code> for the bundled sample.</p><ul class="code-list" aria-label="Exit codes"><li><code>0</code><span>Ready to inspect.</span></li><li><code>1</code><span>Problem found; <code>--strict</code> also fails on warnings.</span></li><li><code>2</code><span>Invalid command or unreadable input.</span></li></ul></div></div></section>
     </main>
-
-    <footer class="shell site-footer">
-      <span>Firebase Environment Doctor · MIT licensed · no telemetry</span>
-      <div class="footer-links">
-        <a href="https://github.com/B-Divyesh/sf-firebase-environment-doctor">Source</a>
-        <a href="/privacy/">Privacy</a>
-        <a href="/terms/">Terms</a>
-      </div>
-    </footer>
+    <footer class="shell site-footer"><span>Firebase Environment Doctor · MIT · v0.1.0</span><div class="footer-links"><a href="https://github.com/B-Divyesh/sf-firebase-environment-doctor">Source <span class="sr-only">(opens GitHub)</span></a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><span>Built by Param Factory</span></div></footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

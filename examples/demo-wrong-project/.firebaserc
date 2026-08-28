@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "sample-store-dev",
+    "production": "sample-store-prod"
+  }
+}

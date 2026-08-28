@@ -75,6 +75,11 @@ WebP. It is descriptive atmosphere, not required to understand the tool; its
 alt text explains the diagnostic stations. License: project-owned generated
 asset under this repository's MIT license.
 
+`site/public/assets/doctor-share-1200-3f5aa21c.webp` is a 1200×630 crop of that
+same project-owned hero for Open Graph and Twitter cards. The 180px apple-touch
+icon is a locally composed PNG version of the project's ember paper-check mark;
+it does not use a third-party icon set.
+
 Generation prompt:
 
 > Handcrafted paper-cut diorama of a tiny diagnostic workbench inspecting a

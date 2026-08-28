@@ -610,6 +610,9 @@ pub fn diagnose_local(options: &DiagnoseOptions) -> Result<Report, DiagnoseError
 pub struct CommandResult {
     pub success: bool,
     pub stdout: String,
+    /// Kept private to the report. Firebase CLI diagnostics can identify an
+    /// authentication failure, but they are never rendered or serialized.
+    pub stderr: String,
 }
 
 pub trait FirebaseRunner {
@@ -634,12 +637,13 @@ impl FirebaseRunner for ProcessFirebaseRunner {
             .args(args)
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
-            .stderr(Stdio::null())
+            .stderr(Stdio::piped())
             .spawn()
         else {
             return CommandResult {
                 success: false,
                 stdout: String::new(),
+                stderr: String::new(),
             };
         };
         let start = Instant::now();
@@ -651,10 +655,12 @@ impl FirebaseRunner for ProcessFirebaseRunner {
                         .map(|output| CommandResult {
                             success: output.status.success(),
                             stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
+                            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
                         })
                         .unwrap_or(CommandResult {
                             success: false,
                             stdout: String::new(),
+                            stderr: String::new(),
                         });
                 }
                 Ok(None) if start.elapsed() < self.timeout => {
@@ -666,10 +672,71 @@ impl FirebaseRunner for ProcessFirebaseRunner {
                     return CommandResult {
                         success: false,
                         stdout: String::new(),
+                        stderr: String::new(),
                     };
                 }
             }
         }
+    }
+}
+
+fn has_authorized_account(value: &Value) -> bool {
+    match value {
+        Value::Object(object) => {
+            let direct_account = object
+                .get("email")
+                .and_then(Value::as_str)
+                .is_some_and(|email| !email.trim().is_empty());
+            direct_account || object.values().any(has_authorized_account)
+        }
+        Value::Array(items) => items.iter().any(has_authorized_account),
+        _ => false,
+    }
+}
+
+fn command_error_text(result: &CommandResult) -> String {
+    format!("{}\n{}", result.stdout, result.stderr).to_ascii_lowercase()
+}
+
+fn looks_like_auth_failure(result: &CommandResult) -> bool {
+    let text = command_error_text(result);
+    [
+        "authentication",
+        "unauthenticated",
+        "credential",
+        "reauth",
+        "login",
+        "not logged in",
+        "token expired",
+    ]
+    .iter()
+    .any(|needle| text.contains(needle))
+}
+
+fn looks_like_permission_failure(result: &CommandResult) -> bool {
+    let text = command_error_text(result);
+    ["permission", "forbidden", "not authorized", "access denied"]
+        .iter()
+        .any(|needle| text.contains(needle))
+}
+
+fn set_auth_invalid(report: &mut Report, message: &str) {
+    report.auth = Check {
+        state: CheckState::Error,
+        summary: "Firebase sign-in needs attention".into(),
+    };
+    if !report
+        .findings
+        .iter()
+        .any(|finding| finding.code == "auth_invalid")
+    {
+        add_finding(
+            report,
+            Severity::Error,
+            "auth_invalid",
+            message,
+            "Run firebase login, then repeat this read-only check with --network.",
+        );
     }
 }
 
@@ -687,35 +754,47 @@ fn contains_project(value: &Value, project_id: &str) -> bool {
 pub fn apply_network_checks(report: &mut Report, runner: &dyn FirebaseRunner) {
     report.network_opt_in = true;
     let login = runner.run(&["login:list", "--json"]);
-    if login.success && serde_json::from_str::<Value>(&login.stdout).is_ok() {
+    let account_is_listed = login.success
+        && serde_json::from_str::<Value>(&login.stdout)
+            .ok()
+            .is_some_and(|json| has_authorized_account(&json));
+    if account_is_listed {
         report.auth = Check {
             state: CheckState::Ok,
-            summary: "Firebase login validated".into(),
+            summary: "Firebase account found; checking project access".into(),
         };
     } else {
-        report.auth = Check {
-            state: CheckState::Error,
-            summary: "Firebase login could not be validated".into(),
-        };
-        add_finding(
+        set_auth_invalid(
             report,
-            Severity::Error,
-            "auth_invalid",
-            "Firebase CLI authentication failed or expired.",
-            "Run firebase login, then repeat this read-only check with --network.",
+            "Firebase CLI has no signed-in account, or the account list could not be read.",
         );
     }
 
     if let Some(project_id) = report.project.as_ref().map(|project| project.id.clone()) {
         let projects = runner.run(&["projects:list", "--json"]);
         if !projects.success {
-            add_finding(
-                report,
-                Severity::Error,
-                "cloud_unreachable",
-                "Firebase projects could not be listed with the current account.",
-                "Check connectivity and Firebase login, then retry with --network.",
-            );
+            if looks_like_auth_failure(&projects) {
+                set_auth_invalid(
+                    report,
+                    "Firebase rejected the current sign-in while checking project access.",
+                );
+            } else if looks_like_permission_failure(&projects) {
+                add_finding(
+                    report,
+                    Severity::Error,
+                    "project_inaccessible",
+                    "Firebase rejected access to the selected project.",
+                    "Confirm the project ID and account permissions in firebase projects:list.",
+                );
+            } else {
+                add_finding(
+                    report,
+                    Severity::Error,
+                    "cloud_unreachable",
+                    "Firebase projects could not be listed because the network check did not complete.",
+                    "Check connectivity, then retry with --network.",
+                );
+            }
         } else if serde_json::from_str::<Value>(&projects.stdout)
             .ok()
             .is_none_or(|json| !contains_project(&json, &project_id))
@@ -727,6 +806,11 @@ pub fn apply_network_checks(report: &mut Report, runner: &dyn FirebaseRunner) {
                 format!("Project '{project_id}' is not visible to the current Firebase account."),
                 "Confirm the project ID and account permissions in firebase projects:list.",
             );
+        } else if account_is_listed {
+            report.auth = Check {
+                state: CheckState::Ok,
+                summary: "Firebase sign-in and project access checked".into(),
+            };
         }
     }
     refresh_summary(report);

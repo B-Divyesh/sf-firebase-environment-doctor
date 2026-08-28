@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#F4EBDD">
+    <meta name="description" content="Run the Firebase Environment Doctor sample project check in an isolated demo.">
+    <link rel="canonical" href="https://firebase-environment-doctor.sociobot.in/demo/">
+    <link rel="icon" href="/assets/favicon-3f649a5a.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon-180-4e2e0d9f.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Demo — Firebase Environment Doctor">
+    <meta property="og:description" content="Run a sample Firebase project check without using your project files.">
+    <meta property="og:url" content="https://firebase-environment-doctor.sociobot.in/demo/">
+    <meta property="og:image" content="https://firebase-environment-doctor.sociobot.in/assets/doctor-share-1200-3f5aa21c.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Demo — Firebase Environment Doctor">
+    <meta name="twitter:description" content="Run a sample Firebase project check without using your project files.">
+    <meta name="twitter:image" content="https://firebase-environment-doctor.sociobot.in/assets/doctor-share-1200-3f5aa21c.webp">
+    <title>Demo — Firebase Environment Doctor</title>
+  </head>
+  <body data-route="Demo">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="shell site-header"><a class="brand" href="/" aria-label="Firebase Environment Doctor home"><span class="brand-mark" aria-hidden="true">✓</span><span>Firebase Environment Doctor</span></a><nav aria-label="Primary navigation"><a href="/demo/" aria-current="page">Demo</a><a href="/#checks">What it checks</a><a href="/#install">Install</a><a href="/privacy/">Privacy</a></nav></header>
+    <p class="route-status" aria-live="polite" data-route-announcement></p>
+    <main id="main" class="shell demo-page" tabindex="-1">
+      <aside class="demo-banner" aria-label="Demo mode"><strong>Demo — sample data, nothing is saved</strong><span>This page uses the bundled sample only.</span><div><button type="button" class="text-button" data-reset-demo>Reset demo</button><a class="text-button" href="/" data-start-real>Start for real</a></div></aside>
+      <section class="demo-intro" aria-labelledby="demo-title"><p class="eyebrow">Bundled sample project</p><h1 id="demo-title">See a wrong Firebase project before a deploy.</h1><p class="lede">This is the result from <code>firebase-environment-doctor --demo</code>. It copies a sample project to a new temporary directory.</p></section>
+<section class="demo-output-section" aria-labelledby="sample-title"><div class="section-heading"><h2 id="sample-title">Sample project check</h2><p>The sample chooses <code>sample-store-prod</code> while its project file defaults to <code>sample-store-dev</code>.</p></div><div class="terminal-wrap"><div class="terminal-bar"><span>doctor / demo-wrong-project</span><span class="terminal-dots" aria-hidden="true">● ● ●</span></div><pre class="terminal" tabindex="0" data-demo-output aria-label="Sample Firebase Environment Doctor output">FIREBASE ENVIRONMENT DOCTOR · READ-ONLY PREFLIGHT
+
+Project   sample-store-prod · from --project
+Target    CLOUD · remote project selected
+CLI       firebase CLI not found on PATH
+Auth      no local credential marker found · use --network to validate
+Rules     firestore · firestore.rules · sha256:sample
+Verdict   CAUTION · 0 errors · 3 warnings
+
+Findings
+  [warn] Project 'sample-store-prod' looks production-like.
+  [warn] --project selects 'sample-store-prod' while .firebaserc defaults to 'sample-store-dev'.
+
+Next checks
+  - Confirm this project ID before any command that can write or deploy.</pre></div><p class="demo-status" data-demo-status aria-live="polite">Sample project check loaded.</p></section>
+<section class="demo-how" aria-labelledby="demo-how-title"><h2 id="demo-how-title">Run the same sample in a terminal</h2><pre class="demo-command" tabindex="0"><code>firebase-environment-doctor --demo</code></pre><p>The command prints the temporary sample directory. It does not read your current project.</p></section>
+    </main>
+    <footer class="shell site-footer"><span>Firebase Environment Doctor · MIT · v0.1.0</span><div class="footer-links"><a href="https://github.com/B-Divyesh/sf-firebase-environment-doctor">Source <span class="sr-only">(opens GitHub)</span></a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><span>Built by Param Factory</span></div></footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

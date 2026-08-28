@@ -1,128 +1,101 @@
 # Firebase Environment Doctor
 
-A read-only preflight for Firebase developers. It answers the questions that
-matter before a risky command: which project is active, whether Firebase CLI
-credentials are usable, where emulators point, which rules files are loaded,
-and whether the current target looks like production.
+A Firebase project check for developers. Check your Firebase project before a
+risky command. It checks the active project, sign-in details, emulators, and
+rules files.
 
-The doctor never deploys, edits Firebase configuration, or prints tokens.
-Network checks are disabled unless you pass `--network`.
+The default check reads project files without a network request. With
+`--network`, it runs only read-only Firebase commands. Reports hide credential
+values.
 
 ## Install
 
-Download the binary for your platform from a GitHub release, or build it:
+Build from this source:
 
 ```sh
 cargo install --path .
 ```
 
-Version 0.1.0 is ready to package with `cargo package` (publishing is handled by
-the Param Factory).
-
 ## Usage
 
-Run from a Firebase project directory or any child directory:
+Run from a Firebase project directory or one of its subdirectories:
 
-```console
-$ firebase-environment-doctor
-FIREBASE ENVIRONMENT DOCTOR · READ-ONLY PREFLIGHT
-Project   my-app-dev · from .firebaserc (default)
-Target    CLOUD · remote project selected
-CLI       firebase 14.12.0 · found
-Auth      cached session found · not validated (offline)
-Rules     firestore.rules · sha256:830e8b7c4bb7
-Verdict   CAUTION · 1 warning
+```sh
+firebase-environment-doctor
 ```
 
-Add explicit, documented Firebase CLI checks only when network access is okay:
+Use `--network` only when you want Firebase access checked:
 
 ```sh
 firebase-environment-doctor --network
 ```
 
-Automation receives a stable schema and no ANSI formatting:
+Use JSON output in scripts:
 
 ```sh
 firebase-environment-doctor --json --project my-app-dev > doctor.json
-firebase-environment-doctor --ci --network
 ```
 
 Useful options:
 
 ```text
 --project <ID_OR_ALIAS>  Override project selection without changing files
---network                Opt in to read-only Firebase account/project checks
---json                   Emit versioned machine-readable JSON
+--network                Check Firebase access with read-only commands
+--json                   Print JSON for scripts
 --ci                     Disable color and interactive behavior
---strict                 Treat warnings as a failing exit status
+--strict                 Exit with failure when warnings appear
 --root <PATH>            Diagnose a specific directory
+--demo                   Run the bundled sample project check
 ```
 
-Exit codes are `0` for a usable environment, `1` when errors are found (or a
-warning with `--strict`), and `2` for invalid invocation or unreadable input.
+Exit code `0` means the check is ready. Exit code `1` means a problem was
+found. `--strict` also returns `1` for warnings. Exit code `2` means the command
+or input was invalid.
 
-Project selection order is `--project`, `FIREBASE_PROJECT`,
-`GOOGLE_CLOUD_PROJECT`, then `.firebaserc`'s `projects.default`. Alias values
-are resolved through `.firebaserc`. Production-like IDs (`prod`, `production`,
-or `live` as a segment) get a prominent warning. Emulator environment
-variables are compared with `firebase.json` ports. Rules hashes use SHA-256 and
-only the first 12 characters are printed in the card.
+## Try the sample
 
-### What network mode runs
+Run the same sample shown on the website:
 
-Only documented, read-only Firebase CLI surfaces:
+```sh
+firebase-environment-doctor --demo
+```
+
+The command copies the bundled project to a new temporary directory and prints
+that directory. The sample selects `sample-store-prod` while its project file
+defaults to `sample-store-dev`.
+
+## What network mode runs
+
+With `--network`, the tool runs these read-only Firebase commands:
 
 ```text
 firebase login:list --json
 firebase projects:list --json
 ```
 
-The first checks authentication; the second checks reachability and whether
-the selected project is visible. No repair, deploy, use, target, config:set, or
-other mutating command is ever invoked.
+The project check requires a listed Firebase account and checks project access.
+It reports sign-in, permission, and network failures separately.
 
-## Example JSON
+## Website demo and privacy
 
-```json
-{
-  "schema_version": 1,
-  "verdict": "caution",
-  "project": { "id": "my-app-dev", "source": ".firebaserc (default)", "production_like": false },
-  "network_opt_in": false,
-  "findings": []
-}
-```
+The website demo uses bundled sample data. Reset removes its demo-only browser
+state. The demo sends requests only to this site. See the live
+[privacy page](https://firebase-environment-doctor.sociobot.in/privacy/).
 
-Fields may be added in compatible releases; `schema_version` changes for a
-breaking representation change. Tests cover the documented project selection,
-wrong-project warning, expired-login, emulator mismatch, and JSON behavior.
-
-## Develop and verify
+## Develop, test, and package
 
 Requirements: Rust 1.85+ and Node.js 20+.
 
 ```sh
-npm install
-npm run lint
+npm ci
 npm test
 npm run build
-npm run build:site   # static site only -> dist/site
-cargo package
+cargo package --locked
 ```
 
-After deployment, `npm run verify:live` checks byte identity, response policy,
-privacy, desktop/390px rendering, keyboard behavior, and serious/critical axe
-findings against the production URL.
-
-`npm test` runs Rust unit/integration tests and the static-site checks. The
-full build produces the CLI in `dist/bin/` and the deployable landing page in
-`dist/site/`.
-
-## Privacy and safety
-
-All analysis is local by default. No telemetry, analytics, third-party scripts,
-or hosted fonts are used. The interactive website demo runs entirely in the
-browser and stores nothing. See the live [privacy page](https://firebase-environment-doctor.sociobot.in/privacy/).
+`npm run build` writes the CLI to `dist/bin/` and the static site to
+`dist/site/`. The factory publishes the package; do not publish from this
+checkout.
 
 ## License
 

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "local-check-no-network",
+    "claim": "The default check reads project files without a network request.",
+    "where": "landing safety strip, README, privacy page",
+    "test": "npm run build && node --test --test-name-pattern='@claim:local-default-no-network' site/tests/claims.test.mjs",
+    "sandbox": "release binary against shipped Firebase fixture without --network"
+  },
+  {
+    "id": "credential-values-hidden",
+    "claim": "Cards and JSON omit credential values.",
+    "where": "landing safety strip, privacy page",
+    "test": "npm run build && node --test --test-name-pattern='@claim:credential-values-hidden' site/tests/claims.test.mjs",
+    "sandbox": "fake Firebase CLI returns a sentinel token; release JSON must not contain it"
+  },
+  {
+    "id": "read-only-firebase-commands",
+    "claim": "The network check runs only read-only Firebase commands.",
+    "where": "landing safety strip, README, privacy page",
+    "test": "npm run build && node --test --test-name-pattern='@claim:read-only-firebase-commands' site/tests/claims.test.mjs",
+    "sandbox": "fake Firebase CLI records every release-binary subprocess invocation"
+  },
+  {
+    "id": "cli-demo-isolated",
+    "claim": "The CLI demo copies a sample project to a new temporary directory.",
+    "where": "demo page, README, .factory/demo.md",
+    "test": "npm run build && node --test --test-name-pattern='@claim:cli-demo-isolated' site/tests/claims.test.mjs",
+    "sandbox": "release binary --demo from an unrelated working directory"
+  },
+  {
+    "id": "browser-demo-isolated",
+    "claim": "The browser demo uses bundled sample data and reset removes its demo-only state.",
+    "where": "demo banner, privacy page, README",
+    "test": "npm run build && node --test --test-name-pattern='@claim:browser-demo-isolated' site/tests/claims.test.mjs",
+    "sandbox": "fresh browser context at /demo/?demo=1, then Reset demo"
+  },
+  {
+    "id": "browser-demo-local-requests",
+    "claim": "The browser demo sends requests only to this site.",
+    "where": "privacy page, README",
+    "test": "npm run build && node --test --test-name-pattern='@claim:browser-demo-local-requests' site/tests/claims.test.mjs",
+    "sandbox": "fresh browser context intercepts every request during the demo flow"
+  }
+]

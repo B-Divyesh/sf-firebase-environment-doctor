@@ -4,8 +4,9 @@
 
 Released and verified at https://firebase-environment-doctor.sociobot.in.
 
-Repair commits: `b91b2f6` (product repair) and `57e0e61` (live verifier).
-Both are pushed to `main`. The deployed static build is from `57e0e61`.
+Repair commits: `b91b2f6` (product repair), `57e0e61` (live verifier), and
+`13d2ac0` (demo-cookie proof). All are pushed to `main`; the deployed static
+build includes `13d2ac0`.
 
 ## What changed
 

@@ -1,6 +1,6 @@
 # Perfection-loop round 2 — repair map
 
-**Repair commits:** `b91b2f6`, `57e0e61`  
+**Repair commits:** `b91b2f6`, `57e0e61`, `13d2ac0`  
 **Live:** https://firebase-environment-doctor.sociobot.in  
 **Verified:** 2026-08-28 UTC
 

@@ -1,68 +1,47 @@
-# Firebase Environment Doctor — round 4 handoff
+# Firebase Environment Doctor — review 5 handoff
 
 ## Status
 
-Released and verified. All findings from reviews 1–4 are resolved. No known
-product or release gaps remain.
+Adversarial review 5 is complete with verdict **FAIL**. No product code was
+modified. The review identifies one blocking demo-presentation issue, one high
+mobile first-screen issue, and three minor structure/evidence issues.
 
-## What changed
+## What was done
 
-- Replaced the edited browser sample with a deterministic recording generated
-  by the release `firebase-environment-doctor --demo` command at site-build
-  time. Only the unique temporary-directory path is normalized.
-- Added `browser-demo-matches-cli` to the 25-entry claims registry. Its browser
-  test compares the rendered transcript exactly with a fresh release CLI run.
-- Added the missing three-step “How to check a Firebase project” workflow with
-  real local/network commands and a generated output excerpt.
-- Re-audited copy, demo documentation, visual thesis, catalog description, and
-  all earlier demo, claims, auth, routing, metadata, focus, legal, privacy, and
-  mobile repairs.
+- Opened the live site cold in fresh 390×844 and 1440×900 contexts.
+- Exercised the one-click browser demo, Reset, Start for real, storage, request
+  origins, and the release CLI demo from an unrelated temporary directory.
+- Audited landing/README copy and corrected the word counts in the review.
+- Read and rechecked every earlier review, polish report, verification report,
+  and handoff against live behavior and current code.
+- Crawled live routes and links; checked titles, metadata, h1/main structure,
+  404 status, route focus/Back behavior, console output, and Axe results.
+- Ran every `.factory/claims.json` command independently from a clean clone.
 
 ## Verification
 
-- Repair commits: `4b051e92ae36d02c2140a0ed525fb12b4aa5addd` and
-  `39c103de12ca406e67799bc77861be825299a64e`.
-- Fresh clone: `/tmp/firebase-doctor-release.UVAF1o/repo`, exact deployed
-  commit `39c103de12ca406e67799bc77861be825299a64e`.
-- Passed: `npm ci`, `npm test`, `npm run build`, and
-  `cargo package --locked`.
-- Passed independently: every `.factory/claims.json` command, `25/25`.
-- Full suite totals: 7 Rust integration tests, 6 site-policy tests, Playwright
-  browser/accessibility checks, and 20 claim test cases containing 25 unique
-  claim tags.
-- Deployment: Azure Static Web Apps deployment
-  `54732af7-132e-4e09-a71e-d5f2e9940b06`.
-- Live `npm run verify:live`: route and asset byte identity, response headers,
-  first-screen wording, exact demo transcript, banner/reset/exit isolation,
-  same-origin requests, route focus/Back, 404, legal shells, mobile geometry,
-  and Axe serious/critical = 0.
-- Factory URL check: pass, 824ms observed load, no console errors. See
-  `.factory/evidence/polish-4/verify-url/verify.json`.
-- Mobile Lighthouse: 100 Performance, 100 Accessibility, 100 Best Practices,
-  100 SEO; FCP 850ms, LCP 1,060ms, TBT 22ms, CLS 0.000974. See
-  `.factory/evidence/polish-4/lighthouse-mobile.json`.
-- Live screenshots:
-  `.factory/evidence/polish-4/live/home-390.png`,
-  `.factory/evidence/polish-4/live/demo-390.png`, and
-  `.factory/evidence/polish-4/verify-url/screenshot-desktop.png`.
-
-The product makes no offline-use promise and ships no service worker. Offline
-reload testing is therefore outside its CLI/docs scope; local no-network and
-browser privacy boundaries are explicitly claim-tested instead.
-
-## Run and verify
+Clean clone: `/tmp/firebase-doctor-review5.brBD3V/repo`
 
 ```sh
 npm ci
 npm test
-npm run build
-cargo package --locked
-EVIDENCE_DIR=.factory/evidence/polish-4/live npm run verify:live
+npm run verify:live
 ```
 
-Deploy `dist/site/` with the static work-order configuration. The release CLI
-is at `dist/bin/firebase-environment-doctor` after `npm run build`.
+All passed. The 25 individual claim commands passed 25/25. The full suite
+passed strict lint, 7 Rust tests, 6 site-policy tests, browser/Axe checks, and
+20 aggregate claim test cases. The live verifier passed routes, 404, metadata,
+privacy, mobile, demo, and Axe checks.
 
 ## Known gaps and next steps
 
-None for the reviewed scope. Registry publishing remains a factory operation.
+See `.factory/review-5.md`:
+
+1. F-5-1 BLOCKING: place real sample result data inside the first demo viewport.
+2. F-5-2 HIGH: make all three home trust facts fully visible at 390×844.
+3. F-5-3 MINOR: make the 404 h1 literal out of context.
+4. F-5-4 MINOR: add the product one-liner to every footer.
+5. F-5-5 MINOR: regenerate and verify copy-audit word counts.
+
+After repair and deployment, repeat the full clean-clone claim matrix and the
+live mobile/desktop review. A PASS requires zero remaining findings.

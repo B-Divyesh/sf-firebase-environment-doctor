@@ -8,7 +8,7 @@ test('home has baseline semantic and privacy metadata', async () => {
   const html = await readFile(new URL('index.html', output), 'utf8');
   assert.match(html, /<html lang="en">/);
   assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1);
-  assert.match(html, /<main id="main">/);
+  assert.match(html, /<main id="main"[^>]*tabindex="-1"/);
   assert.match(html, /<title>Firebase Environment Doctor/);
   assert.match(html, /alt="Paper-cut terminal inspection bench/);
   assert.doesNotMatch(html, /google-analytics|googletagmanager|fonts\.googleapis|cdn\./i);

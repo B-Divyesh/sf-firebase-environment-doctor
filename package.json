@@ -11,7 +11,8 @@
     "test:a11y": "node site/tests/browser.mjs",
     "build": "cargo build --release && npm run build:site && node scripts/copy-binary.mjs",
     "build:site": "vite build --config site/vite.config.ts",
-    "preview": "vite preview --config site/vite.config.ts"
+    "preview": "vite preview --config site/vite.config.ts",
+    "verify:live": "node scripts/verify-live.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

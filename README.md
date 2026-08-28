@@ -110,6 +110,10 @@ npm run build:site   # static site only -> dist/site
 cargo package
 ```
 
+After deployment, `npm run verify:live` checks byte identity, response policy,
+privacy, desktop/390px rendering, keyboard behavior, and serious/critical axe
+findings against the production URL.
+
 `npm test` runs Rust unit/integration tests and the static-site checks. The
 full build produces the CLI in `dist/bin/` and the deployable landing page in
 `dist/site/`.

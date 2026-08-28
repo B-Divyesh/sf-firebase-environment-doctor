@@ -28,10 +28,6 @@ struct Cli {
     #[arg(long)]
     json: bool,
 
-    /// Disable interactive/colored behavior (the doctor never prompts)
-    #[arg(long)]
-    ci: bool,
-
     /// Return exit 1 when warnings are present
     #[arg(long)]
     strict: bool,

@@ -17,10 +17,18 @@ test('every product page has route metadata and a shared accessible shell', asyn
     assert.match(html, /<html lang="en">/);
     assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1, path);
     assert.match(html, /<main[^>]*tabindex="-1"/);
+    assert.match(html, /<h1[^>]*tabindex="-1"/);
     assert.match(html, new RegExp(`<title>${title}</title>`));
     assert.ok(title.length <= 60, `${title} is too long`);
     assert.match(html, /<link rel="canonical" href="https:\/\/firebase-environment-doctor\.sociobot\.in/);
+    assert.match(html, /property="og:title"/);
+    assert.match(html, /property="og:description"/);
+    assert.match(html, /property="og:url"/);
     assert.match(html, /property="og:image" content="https:\/\/firebase-environment-doctor\.sociobot\.in\/assets\/doctor-share-1200-3f5aa21c\.webp"/);
+    assert.match(html, /name="twitter:card" content="summary_large_image"/);
+    assert.match(html, /name="twitter:title"/);
+    assert.match(html, /name="twitter:description"/);
+    assert.match(html, /name="twitter:image" content="https:\/\/firebase-environment-doctor\.sociobot\.in\/assets\/doctor-share-1200-3f5aa21c\.webp"/);
     assert.match(html, /apple-touch-icon-180-4e2e0d9f.png/);
     assert.match(html, /Built by Param Factory/);
   }

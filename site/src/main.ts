@@ -4,6 +4,7 @@ const demoKey = 'demo:firebase-environment-doctor:reset';
 const routeFocusKey = 'firebase-environment-doctor:route-focus';
 const pageRoute = document.body.dataset.route ?? 'Page';
 const announcement = document.querySelector<HTMLElement>('[data-route-announcement]');
+const heading = document.querySelector<HTMLElement>('main h1');
 const moveFocusToHeading = (() => {
   try {
     const requested = sessionStorage.getItem(routeFocusKey) === 'true';
@@ -11,14 +12,23 @@ const moveFocusToHeading = (() => {
     return requested;
   } catch { return false; }
 })();
+const navigationType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined)?.type;
+
+function focusRouteHeading() {
+  heading?.focus({ preventScroll: true });
+}
 
 if (location.pathname === '/' && new URLSearchParams(location.search).get('demo') === '1') {
   location.replace('/demo/?demo=1');
 }
 
 window.requestAnimationFrame(() => {
-  if (moveFocusToHeading) document.querySelector<HTMLElement>('main h1')?.focus({ preventScroll: true });
+  if (moveFocusToHeading || navigationType === 'back_forward') focusRouteHeading();
   if (announcement) announcement.textContent = `${pageRoute} page loaded.`;
+});
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) focusRouteHeading();
 });
 
 document.addEventListener('click', (event) => {

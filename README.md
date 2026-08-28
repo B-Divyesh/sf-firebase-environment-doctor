@@ -1,8 +1,8 @@
 # Firebase Environment Doctor
 
 A Firebase project check for developers. Check your Firebase project before a
-risky command. It checks the active project, sign-in details, emulators, and
-rules files.
+risky command. It reports the selected project, sign-in details, emulator
+addresses, rules files, and Firebase CLI status.
 
 The default check reads project files without a network request. With
 `--network`, it runs only read-only Firebase commands. Reports hide credential
@@ -39,16 +39,15 @@ firebase-environment-doctor --json --project my-app-dev > doctor.json
 Useful options:
 
 ```text
---project <ID_OR_ALIAS>  Override project selection without changing files
+--project <ID_OR_ALIAS>  Select a project without changing files
 --network                Check Firebase access with read-only commands
 --json                   Print JSON for scripts
---ci                     Disable color and interactive behavior
 --strict                 Exit with failure when warnings appear
 --root <PATH>            Diagnose a specific directory
 --demo                   Run the bundled sample project check
 ```
 
-Exit code `0` means the check is ready. Exit code `1` means a problem was
+Exit code `0` means no blocking problem. Exit code `1` means a problem was
 found. `--strict` also returns `1` for warnings. Exit code `2` means the command
 or input was invalid.
 
@@ -82,7 +81,7 @@ The website demo uses bundled sample data. Reset removes its demo-only browser
 state. The demo sends requests only to this site. See the live
 [privacy page](https://firebase-environment-doctor.sociobot.in/privacy/).
 
-## Develop, test, and package
+## Develop, test, package, and deploy
 
 Requirements: Rust 1.85+ and Node.js 20+.
 
@@ -93,9 +92,8 @@ npm run build
 cargo package --locked
 ```
 
-`npm run build` writes the CLI to `dist/bin/` and the static site to
-`dist/site/`. The factory publishes the package; do not publish from this
-checkout.
+`npm run build` creates the CLI in `dist/bin/` and the static site in
+`dist/site/`. Deploy `dist/site/` through the factory static work order.
 
 ## License
 

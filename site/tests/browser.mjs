@@ -69,6 +69,20 @@ try {
   assert.deepEqual(seriousDemo, [], seriousDemo.map((item) => `${item.id}: ${item.help}`).join('\n'));
   await demoContext.close();
 
+  const routingContext = await browser.newContext();
+  const routing = await routingContext.newPage();
+  await routing.goto(origin, { waitUntil: 'networkidle' });
+  await routing.getByRole('link', { name: 'Demo' }).click();
+  await routing.waitForURL(`${origin}/demo/`);
+  await routing.waitForFunction(() => document.activeElement === document.querySelector('#demo-title'));
+  assert.equal(await routing.locator(':focus').getAttribute('id'), 'demo-title');
+  assert.match(await routing.locator('[data-route-announcement]').innerText(), /Demo page loaded/);
+  await routing.goBack({ waitUntil: 'networkidle' });
+  await routing.waitForFunction(() => document.activeElement === document.querySelector('#hero-title'));
+  assert.equal(await routing.locator(':focus').getAttribute('id'), 'hero-title');
+  assert.match(await routing.locator('[data-route-announcement]').innerText(), /Home page loaded/);
+  await routingContext.close();
+
   const legalContext = await browser.newContext();
   const legalPage = await legalContext.newPage();
   for (const path of ['/privacy/', '/terms/']) {

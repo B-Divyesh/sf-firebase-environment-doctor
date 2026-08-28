@@ -3,22 +3,36 @@
     "id": "local-check-no-network",
     "claim": "The default check reads project files without a network request.",
     "where": "landing safety strip, README, privacy page",
-    "test": "npm run build && node --test --test-name-pattern='@claim:local-default-no-network' site/tests/claims.test.mjs",
-    "sandbox": "release binary against shipped Firebase fixture without --network"
+    "test": "npm run build && node --test --test-name-pattern='@claim:local-check-no-network' site/tests/claims.test.mjs",
+    "sandbox": "release binary against a shipped Firebase fixture and a logging Firebase executable"
+  },
+  {
+    "id": "local-check-runs-locally",
+    "claim": "The default check runs locally.",
+    "where": "landing trust line",
+    "test": "npm run build && node --test --test-name-pattern='@claim:local-check-runs-locally' site/tests/claims.test.mjs",
+    "sandbox": "release binary against a shipped Firebase fixture; only the local version lookup is allowed"
   },
   {
     "id": "credential-values-hidden",
     "claim": "Cards and JSON omit credential values.",
-    "where": "landing safety strip, privacy page",
+    "where": "landing safety strip, README, privacy page",
     "test": "npm run build && node --test --test-name-pattern='@claim:credential-values-hidden' site/tests/claims.test.mjs",
     "sandbox": "fake Firebase CLI returns a sentinel token; release JSON must not contain it"
   },
   {
     "id": "read-only-firebase-commands",
-    "claim": "The network check runs only read-only Firebase commands.",
+    "claim": "The network check runs only read-only Firebase account and project commands.",
     "where": "landing safety strip, README, privacy page",
     "test": "npm run build && node --test --test-name-pattern='@claim:read-only-firebase-commands' site/tests/claims.test.mjs",
-    "sandbox": "fake Firebase CLI records every release-binary subprocess invocation"
+    "sandbox": "fake Firebase CLI records every release-binary subprocess invocation in local and network modes"
+  },
+  {
+    "id": "never-deploys",
+    "claim": "The check does not deploy or change Firebase settings.",
+    "where": "landing trust line, privacy page",
+    "test": "npm run build && node --test --test-name-pattern='@claim:never-deploys' site/tests/claims.test.mjs",
+    "sandbox": "subprocess allow-list covers local and --network release-binary paths"
   },
   {
     "id": "cli-demo-isolated",
@@ -40,5 +54,117 @@
     "where": "privacy page, README",
     "test": "npm run build && node --test --test-name-pattern='@claim:browser-demo-local-requests' site/tests/claims.test.mjs",
     "sandbox": "fresh browser context intercepts every request during the demo flow"
+  },
+  {
+    "id": "website-no-tracking",
+    "claim": "The website uses no analytics, advertising, cookies, or third-party scripts.",
+    "where": "privacy page",
+    "test": "npm run build && node --test --test-name-pattern='@claim:website-no-tracking' site/tests/claims.test.mjs",
+    "sandbox": "fresh browser context checks home and demo requests, cookies, local storage, and session storage"
+  },
+  {
+    "id": "five-firebase-checks",
+    "claim": "The check reports selected project, sign-in, emulator, rules-file, and Firebase CLI results.",
+    "where": "landing checks section, README opening",
+    "test": "npm run build && node --test --test-name-pattern='@claim:five-firebase-checks' site/tests/claims.test.mjs",
+    "sandbox": "release binary against the bundled demo project"
+  },
+  {
+    "id": "project-input-boundaries",
+    "claim": "The check reads project files and, only with --network, Firebase CLI results.",
+    "where": "landing checks section, terms page",
+    "test": "npm run build && node --test --test-name-pattern='@claim:project-input-boundaries' site/tests/claims.test.mjs",
+    "sandbox": "release binary against fixture files and a fake Firebase CLI"
+  },
+  {
+    "id": "next-step-guidance",
+    "claim": "The check includes a next step for every shipped fixture.",
+    "where": "landing checks section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:next-step-guidance' site/tests/claims.test.mjs",
+    "sandbox": "release binary against every shipped test fixture"
+  },
+  {
+    "id": "project-selection",
+    "claim": "The check selects a project from the command, environment, or project file in that order without changing files.",
+    "where": "landing selected-project card, README options",
+    "test": "npm run build && node --test --test-name-pattern='@claim:project-selection' site/tests/claims.test.mjs",
+    "sandbox": "release binary with command, environment, alias, and default-project fixtures"
+  },
+  {
+    "id": "local-sign-in-details",
+    "claim": "The local check reports a present application-credentials file without validating it online.",
+    "where": "landing Firebase-access card",
+    "test": "npm run build && node --test --test-name-pattern='@claim:local-sign-in-details' site/tests/claims.test.mjs",
+    "sandbox": "release binary with a temporary GOOGLE_APPLICATION_CREDENTIALS marker"
+  },
+  {
+    "id": "emulator-address-check",
+    "claim": "The check compares emulator addresses with firebase.json.",
+    "where": "landing emulator-addresses card, README opening",
+    "test": "npm run build && node --test --test-name-pattern='@claim:emulator-address-check' site/tests/claims.test.mjs",
+    "sandbox": "release binary against the emulator-mismatch fixture"
+  },
+  {
+    "id": "rules-file-check",
+    "claim": "The check reports whether configured rules files exist.",
+    "where": "landing rules-files card, README opening",
+    "test": "npm run build && node --test --test-name-pattern='@claim:rules-file-check' site/tests/claims.test.mjs",
+    "sandbox": "release binary with present and missing configured rules files"
+  },
+  {
+    "id": "firebase-cli-presence",
+    "claim": "The check reports whether the Firebase CLI is installed.",
+    "where": "landing Firebase-CLI card",
+    "test": "npm run build && node --test --test-name-pattern='@claim:firebase-cli-presence' site/tests/claims.test.mjs",
+    "sandbox": "release binary with a fake Firebase CLI version command"
+  },
+  {
+    "id": "project-access",
+    "claim": "With --network, the check verifies access to the selected Firebase project.",
+    "where": "landing Firebase-CLI card, install note",
+    "test": "npm run build && node --test --test-name-pattern='@claim:project-access' site/tests/claims.test.mjs",
+    "sandbox": "release binary with a listed account and visible selected project"
+  },
+  {
+    "id": "json-output",
+    "claim": "The --json option prints parseable, non-ANSI report data for scripts.",
+    "where": "landing install note, README options",
+    "test": "npm run build && node --test --test-name-pattern='@claim:json-output' site/tests/claims.test.mjs",
+    "sandbox": "release binary JSON output against a shipped fixture"
+  },
+  {
+    "id": "project-root-discovery",
+    "claim": "The --root option finds a Firebase project from a child directory.",
+    "where": "README usage and options",
+    "test": "npm run build && node --test --test-name-pattern='@claim:project-root-discovery' site/tests/claims.test.mjs",
+    "sandbox": "release binary from a nested temporary project directory"
+  },
+  {
+    "id": "exit-codes",
+    "claim": "Exit code 0 means ready, 1 means a problem or strict warning, and 2 means invalid input.",
+    "where": "landing exit-code list, README exit-code section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:exit-codes' site/tests/claims.test.mjs",
+    "sandbox": "release binary with ready, warning, missing-rules, and invalid-root cases"
+  },
+  {
+    "id": "network-account-and-project-access",
+    "claim": "The network check requires a listed Firebase account and checks project access.",
+    "where": "README network section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:network-account-and-project-access' site/tests/claims.test.mjs",
+    "sandbox": "release binary with listed-account, no-account, permission, and unreachable fake Firebase responses"
+  },
+  {
+    "id": "network-failure-classification",
+    "claim": "The network check reports sign-in, permission, and network failures separately.",
+    "where": "README network section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:network-failure-classification' site/tests/claims.test.mjs",
+    "sandbox": "release binary with one fake Firebase response for each failure category"
+  },
+  {
+    "id": "build-artifacts",
+    "claim": "npm run build creates the CLI and static-site artifacts.",
+    "where": "README develop, test, and package section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:build-artifacts' site/tests/claims.test.mjs",
+    "sandbox": "fresh build checks dist/bin/firebase-environment-doctor and dist/site/index.html"
   }
 ]

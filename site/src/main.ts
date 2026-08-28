@@ -60,6 +60,8 @@ function selectCase(name: DemoCase, announce = true) {
     tab.tabIndex = active ? 0 : -1;
   });
   if (!output || !status) return;
+  const activeTab = tabs.find((tab) => tab.dataset.demoCase === name);
+  if (activeTab) output.setAttribute('aria-labelledby', activeTab.id);
   window.clearTimeout(updateTimer);
   output.setAttribute('aria-busy', 'true');
   status.textContent = announce ? 'Running local fixture…' : '';

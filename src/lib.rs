@@ -457,7 +457,11 @@ pub fn diagnose_local(options: &DiagnoseOptions) -> Result<Report, DiagnoseError
     let active = environment_emulators(&options.environment);
     let mut report = Report {
         schema_version: 1,
-        root: root.display().to_string(),
+        root: root
+            .file_name()
+            .and_then(|name| name.to_str())
+            .unwrap_or(".")
+            .to_owned(),
         verdict: Verdict::Ready,
         project,
         target: if active.is_empty() {

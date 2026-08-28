@@ -1,4 +1,32 @@
-# Firebase Environment Doctor — round 5 handoff
+# Firebase Environment Doctor — review 6 handoff
+
+## Current review status
+
+**FAIL — F-6-1 remains.** This review did not change product code. It added
+`.factory/review-6.md` and rechecked the live site, clean clone, claims, demo,
+copy, history, and route structure.
+
+## Review 6 verification
+
+- Fresh live contexts at 390×844 and 1440×1000 established the job, audience,
+  and first action without scrolling.
+- The live demo showed the generated wrong-project result in its first mobile
+  viewport. The banner, Reset action, `demo:` storage namespace, and
+  same-origin request boundary were checked in a new browser context.
+- Fresh clone `/tmp/firebase-doctor-review6.ycfPTO/repo` passed `npm ci`,
+  `npm test`, and every one of the 25 registry commands independently.
+- Home, Demo, Privacy, Terms, and 404 were crawled for title/metadata,
+  heading, footer/header, links, deep-link behavior, and focus after Back.
+
+## Remaining work
+
+Terms has unregistered licence, affiliation, trademark, and warranty claims.
+Add registry proof for statements a clean clone can prove (at least the shipped
+MIT licence and matching terms), and remove or replace statements that cannot
+be sandbox-proven. See `F-6-1` in `.factory/review-6.md` for exact quotes and
+the required fix. Re-run the 25-command claims matrix after repairing it.
+
+## Historical round 5 handoff
 
 ## Status
 

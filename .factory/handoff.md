@@ -2,36 +2,28 @@
 
 ## Status — FAIL
 
-Completed adversarial first-read review work order
-firebase-environment-doctor-review-1 on 2026-08-28 UTC. No product code was
-changed. The full evidence and required repairs are in .factory/review-1.md.
+Completed adversarial first-read review 2 on 2026-08-28 UTC. No product code was
+modified. The committed review is .factory/review-2.md.
 
 ## What was verified
 
-- Opened the live page in fresh 390px and desktop browser contexts before
-  scrolling; captured /tmp/fed-mobile.png and /tmp/fed-desktop.png.
-- Exercised the visible sample link and /demo; neither provides a genuine
-  sandboxed CLI demo. The release binary rejects --demo.
-- Confirmed /demo and an unknown path both fall back to the home page.
-- Checked live metadata, headers, storage, request origins, all home links,
-  legal pages, and historical verification records.
-- Created a clean clone at /tmp/firebase-doctor-review.DjRyXC/repo and ran:
+- Opened live production cold in fresh 390×844 and 1440×1000 browser contexts.
+- Exercised the sample action, direct /demo, unknown route, live
+  storage/request interception, links, metadata, focus styling, mobile type,
+  and touch geometry.
+- Read all earlier review, verification, and handoff records. Confirmed fixed
+  lint/cache/header items and the still-unfixed demo, claims, auth, copy,
+  routing, metadata, focus, mobile, target-size, and shared-shell findings.
+- In clean clone /tmp/firebase-doctor-review-2.8KtQsf/repo, ran npm ci,
+  npm test, and npm run build; all passed. The release binary rejects --demo in
+  a temporary directory.
+- .factory/claims.json is absent, so no listed claim tests exist or could run.
 
-    npm ci
-    npm test
-    npm run build
+## Required next work
 
-All three passed. The claims registry is missing, so there were no registered
-claim commands to run.
+See F-2-1 through F-2-6 in .factory/review-2.md. The release is not ready: the
+sample is static rather than a real isolated CLI demo, every visitor claim is
+untested, and the CLI can misclassify a real no-login/expired-login state.
 
-## Blocking work left
-
-1. Add a real, temp-directory CLI sample command and resettable /demo route.
-2. Add .factory/claims.json plus one tagged sandbox test per retained claim.
-3. Fix the known no-login/expired-login auth classification and remove the
-   unsupported live demo assertion until tested.
-4. Repair the first-screen copy/action, routes/404, metadata, common legal
-   shell, dark focus, mobile text, and undersized targets.
-
-The repository remains buildable; this commit changes only review and handoff
+The repository remains buildable. This commit changes only review and handoff
 documentation.

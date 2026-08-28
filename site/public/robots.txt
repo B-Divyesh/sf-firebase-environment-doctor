@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://firebase-environment-doctor.sociobot.in/sitemap.xml

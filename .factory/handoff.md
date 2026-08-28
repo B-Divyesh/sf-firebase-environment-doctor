@@ -1,78 +1,40 @@
-# Firebase Environment Doctor — polish 2 handoff
+# Firebase Environment Doctor — review 3 handoff
 
 ## Status
 
-Released and verified at https://firebase-environment-doctor.sociobot.in.
+Review 3 is **FAIL**. No product code was changed. The full review is in
+`.factory/review-3.md`.
 
-Repair commits: `b91b2f6` (product repair), `57e0e61` (live verifier), and
-`13d2ac0` (demo-cookie proof). All are pushed to `main`; the deployed static
-build includes `13d2ac0`.
+## What was verified
 
-## What changed
+- Fresh 390px and desktop production visits clearly explained the job,
+  intended Firebase-developer audience, and primary sample action.
+- `/demo/?demo=1` immediately showed the wrong-project sample, persistent
+  demo banner, Reset demo, Start for real, the isolated `demo:` browser key,
+  and same-origin-only browser requests. Reset and exiting demo left no
+  browser storage/cookies.
+- A clean clone at `/tmp/firebase-doctor-review3.HQ065c/repo` passed `npm ci`,
+  `npm test`, `npm run build`, and all six exact commands in
+  `.factory/claims.json`.
+- The release CLI's `--demo` command was run from an unrelated temporary
+  directory. It created a distinct `/tmp/firebase-environment-doctor-demo-*`
+  sample directory and produced the expected `sample-store-prod` versus
+  `sample-store-dev` warning.
+- Production route/link/metadata checks confirmed real Home/Demo/Privacy/Terms
+  routes, a designed HTTP 404, 200 internal/external links, mobile no-overflow,
+  headers, and no console errors.
 
-- Added a real `firebase-environment-doctor --demo` command. It copies the
-  shipped wrong-project sample into a new temporary directory and runs the real
-  diagnostic path there.
-- Added `/demo/?demo=1` with an isolated sample-state key, persistent demo
-  banner, Reset demo, and Start for real actions.
-- Added the claims registry, tagged release-binary/browser claim tests, and
-  realistic sign-in expiration/no-account classification tests.
-- Rebuilt the static site around real `/demo`, `/privacy`, `/terms`, and 404
-  documents, per-route metadata, OG art, Apple icon, sitemap, and SWA 404
-  routing.
-- Rewrote the first screen, README, catalog line, and supporting copy in plain
-  language; preserved the paper-cut inspection-bench visual system.
-- Fixed dark-panel focus contrast, 16px mobile information/control text,
-  44px brand/footer targets, and the shared legal page shell.
+## Remaining gaps
 
-## Verification
+1. Route changes and Back do not focus the new h1 because the h1 elements are
+   not programmatically focusable, despite the route script attempting focus.
+2. The six registered claims pass, but several live operational and exit-code
+   promises are still not registered/tested. The exact statements and required
+   claim IDs/tests are enumerated in review finding F-3-2.
+3. Privacy, Terms, and the designed 404 have incomplete Twitter/OG metadata.
 
-From the working tree:
+## Next steps
 
-```sh
-npm test
-npm run build
-cargo package --locked
-```
-
-All passed. `npm test` includes strict format/Clippy/TypeScript, seven Rust
-tests, static metadata/policy tests, Playwright desktop/390px/axe tests, and
-all six claim records.
-
-From a clean clone at `/tmp/firebase-doctor-clean.RK6D3c/repo`, `npm ci` passed
-and every exact command listed in `.factory/claims.json` passed individually.
-
-Production checks passed:
-
-```sh
-/opt/fleet/lib/verify-url.sh https://firebase-environment-doctor.sociobot.in .factory/evidence/verify-url
-EVIDENCE_DIR=.factory/evidence/live npm run verify:live
-```
-
-These checks confirmed live byte identity for product pages/assets, response
-headers, titles, language, H1/main/alt/console baseline, mobile layout, skip
-link, demo reset, same-origin demo requests, 404, and zero serious/critical axe
-issues. Screenshots are `.factory/evidence/verify-url/screenshot-desktop.png`,
-`.factory/evidence/verify-url/screenshot-mobile.png`,
-`.factory/evidence/live/home-390.png`, and `.factory/evidence/live/demo-390.png`.
-
-Mobile Lighthouse on the live URL: Performance 100, Accessibility 100, Best
-Practices 100, SEO 100, LCP 1356ms, CLS 0.00097. The report is
-`.factory/evidence/lighthouse.json`.
-
-## Run and package
-
-```sh
-npm ci
-npm test
-npm run build
-cargo package --locked
-```
-
-The deployable static site is `dist/site`; the binary is
-`dist/bin/firebase-environment-doctor`. The factory owns publishing; no crate
-was published from this work order.
-
-## Known gaps
-
-None. No unresolved review finding remains.
+Implement the three fixes above, add regression tests, deploy, and repeat the
+live first-read review. Do not mark the product accepted until the report has
+zero findings.

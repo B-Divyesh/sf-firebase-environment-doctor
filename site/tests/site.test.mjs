@@ -31,6 +31,7 @@ test('every product page has route metadata and a shared accessible shell', asyn
     assert.match(html, /name="twitter:image" content="https:\/\/firebase-environment-doctor\.sociobot\.in\/assets\/doctor-share-1200-3f5aa21c\.webp"/);
     assert.match(html, /apple-touch-icon-180-4e2e0d9f.png/);
     assert.match(html, /Built by Param Factory/);
+    assert.match(html, /Checks Firebase projects before deploys\./);
   }
 });
 
@@ -46,7 +47,7 @@ test('demo, sitemap, and designed 404 are emitted', async () => {
   assert.equal(config.responseOverrides?.['404']?.rewrite, '/404.html');
   assert.equal(config.responseOverrides?.['404']?.statusCode, 404);
   const notFound = await readFile(new URL('404.html', output), 'utf8');
-  assert.match(notFound, /This paper slip is not on the bench/);
+  assert.match(notFound, /This Firebase check page was not found/);
 });
 
 test('landing explains the three-step Firebase project workflow', async () => {
@@ -62,6 +63,11 @@ test('landing explains the three-step Firebase project workflow', async () => {
   assert.match(home, /data-demo-excerpt/);
   assert.match(home, /sha256:ed1e7c11f025/);
   assert.doesNotMatch(home, /FIREBASE_DOCTOR_(DEMO_TRANSCRIPT|WORKFLOW_EXCERPT)/);
+  const demo = await readFile(new URL('demo/index.html', output), 'utf8');
+  assert.doesNotMatch(demo, /FIREBASE_DOCTOR_DEMO_SUMMARY/);
+  for (const text of ['data-demo-verdict', 'sample-store-prod', 'sample-store-dev', 'Confirm this project ID before']) {
+    assert.match(demo, new RegExp(text));
+  }
 });
 
 test('every registered claim has one tagged test and a runnable command', async () => {

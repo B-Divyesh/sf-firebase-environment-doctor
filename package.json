@@ -7,13 +7,14 @@
     "dev": "cargo build --release && vite --config site/vite.config.ts",
     "lint": "cargo fmt --check && cargo clippy --all-targets -- -D warnings && tsc --noEmit -p site/tsconfig.json",
     "test": "npm run lint && cargo test && npm run test:site && npm run test:a11y && npm run test:claims",
-    "test:site": "npm run build:site && node --test site/tests/site.test.mjs",
+    "test:site": "npm run build:site && npm run audit:copy && node --test site/tests/site.test.mjs",
     "test:a11y": "node site/tests/browser.mjs",
     "test:claims": "npm run build && node --test site/tests/claims.test.mjs",
     "build": "npm run build:site && node scripts/copy-binary.mjs",
     "build:site": "cargo build --release && vite build --config site/vite.config.ts",
     "preview": "vite preview --config site/vite.config.ts",
-    "verify:live": "node scripts/verify-live.mjs"
+    "verify:live": "node scripts/verify-live.mjs",
+    "audit:copy": "node scripts/audit-copy.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

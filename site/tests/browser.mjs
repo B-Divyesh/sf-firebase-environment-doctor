@@ -42,6 +42,10 @@ try {
     assert.deepEqual(serious, [], serious.map((item) => `${item.id}: ${item.help}`).join('\n'));
     if (viewport.width === 390) {
       assert.ok(await page.locator('body').evaluate((node) => node.scrollWidth <= node.clientWidth));
+      for (const fact of await page.locator('.trust-line li').all()) {
+        const box = await fact.boundingBox();
+        assert.ok(box && box.y >= 0 && box.y + box.height <= viewport.height, `trust fact is below the first viewport: ${await fact.innerText()}`);
+      }
       for (const selector of ['.small-note', '.safety-list span', '.workflow-steps p', '.workflow-index', '.workflow-output', '.checks p', '.command .button']) {
         const size = await page.locator(selector).first().evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
         assert.ok(size >= 16, `${selector} is ${size}px`);
@@ -68,6 +72,14 @@ try {
   assert.equal(await demo.title(), 'Demo — Firebase Environment Doctor');
   assert.match(await demo.locator('h1').innerText(), /wrong Firebase project/i);
   assert.match(await demo.locator('.demo-banner').innerText(), /nothing is saved/);
+  for (const selector of ['[data-demo-verdict]', '[data-demo-selected]', '[data-demo-default]', '[data-demo-next-check]']) {
+    const box = await demo.locator(selector).boundingBox();
+    assert.ok(box && box.y >= 0 && box.y + box.height <= 844, `${selector} is below the demo first viewport`);
+  }
+  assert.equal(await demo.locator('[data-demo-verdict]').innerText(), 'CAUTION');
+  assert.equal(await demo.locator('[data-demo-selected]').innerText(), 'sample-store-prod');
+  assert.equal(await demo.locator('[data-demo-default]').innerText(), 'sample-store-dev');
+  assert.match(await demo.locator('[data-demo-next-check]').innerText(), /^Confirm this project ID before/);
   assert.ok(await demo.locator('.terminal').evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize) >= 16));
   await demo.getByRole('button', { name: 'Reset demo' }).click();
   assert.match(await demo.locator('[data-route-announcement]').innerText(), /Demo reset/);

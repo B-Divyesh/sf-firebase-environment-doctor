@@ -9,6 +9,32 @@ function escapeHtml(value: string): string {
     .replaceAll('>', '&gt;');
 }
 
+function requiredMatch(transcript: string, expression: RegExp, label: string): RegExpMatchArray {
+  const match = transcript.match(expression);
+  if (!match) throw new Error(`The --demo transcript did not include ${label}.`);
+  return match;
+}
+
+function demoSummary(transcript: string): string {
+  const project = requiredMatch(transcript, /^Project\s+(.+?)\s+·/m, 'the selected project')[1];
+  const mismatch = requiredMatch(
+    transcript,
+    /^  \[warn\] --project selects '(.+?)' while \.firebaserc defaults to '(.+?)'\.$/m,
+    'the project mismatch'
+  );
+  const verdict = requiredMatch(transcript, /^Verdict\s+([A-Z]+)\s+·/m, 'the verdict')[1];
+  const nextCheck = requiredMatch(transcript, /^  - (Confirm this project ID before .+)$/m, 'the first next check')[1];
+  if (project !== mismatch[1]) throw new Error('The selected-project summary does not match the mismatch finding.');
+  return `<section class="demo-summary" data-demo-summary aria-labelledby="demo-summary-title">
+  <div class="demo-summary-heading"><p class="eyebrow">Sample result</p><h2 id="demo-summary-title"><span data-demo-verdict>${escapeHtml(verdict)}</span> · Wrong project selected</h2></div>
+  <dl>
+    <div><dt>Selected project</dt><dd><code data-demo-selected>${escapeHtml(project)}</code></dd></div>
+    <div><dt>Project file default</dt><dd><code data-demo-default>${escapeHtml(mismatch[2])}</code></dd></div>
+    <div><dt>Next check</dt><dd data-demo-next-check>${escapeHtml(nextCheck)}</dd></div>
+  </dl>
+</section>`;
+}
+
 function demoRecording() {
   let transcript: string | undefined;
   return {
@@ -18,7 +44,8 @@ function demoRecording() {
       handler(html: string, context: { filename: string }) {
         const transcriptMarker = '{{FIREBASE_DOCTOR_DEMO_TRANSCRIPT}}';
         const excerptMarker = '{{FIREBASE_DOCTOR_WORKFLOW_EXCERPT}}';
-        if (!html.includes(transcriptMarker) && !html.includes(excerptMarker)) return html;
+        const summaryMarker = '{{FIREBASE_DOCTOR_DEMO_SUMMARY}}';
+        if (!html.includes(transcriptMarker) && !html.includes(excerptMarker) && !html.includes(summaryMarker)) return html;
         transcript ??= generateDemoTranscript(resolve(__dirname, '../target/release/firebase-environment-doctor'));
         const excerpt = transcript
           .split('\n')
@@ -26,7 +53,8 @@ function demoRecording() {
           .join('\n');
         return html
           .replace(transcriptMarker, escapeHtml(transcript))
-          .replace(excerptMarker, escapeHtml(excerpt));
+          .replace(excerptMarker, escapeHtml(excerpt))
+          .replace(summaryMarker, demoSummary(transcript));
       }
     }
   };

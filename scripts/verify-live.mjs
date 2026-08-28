@@ -5,7 +5,7 @@ import { mkdir, readFile, readdir } from 'node:fs/promises';
 import { generateDemoTranscript } from './demo-transcript.mjs';
 
 const origin = (process.env.VERIFY_URL ?? 'https://firebase-environment-doctor.sociobot.in').replace(/\/$/, '');
-const cacheBust = `polish-4-${Date.now()}`;
+const cacheBust = `polish-5-${Date.now()}`;
 const evidence = process.env.EVIDENCE_DIR ?? '.factory/evidence/live';
 const expectedDemoTranscript = generateDemoTranscript('dist/bin/firebase-environment-doctor');
 await mkdir(evidence, { recursive: true });
@@ -29,7 +29,7 @@ for (const path of ['/', '/demo/', '/privacy/', '/terms/']) {
 }
 const missing = await fetch(`${origin}/not-a-real-route?${cacheBust}`, { cache: 'no-store' });
 assert.equal(missing.status, 404);
-assert.match(await missing.text(), /This paper slip is not on the bench/);
+assert.match(await missing.text(), /This Firebase check page was not found/);
 
 for (const asset of await readdir('dist/site/assets')) {
   const response = await fetch(`${origin}/assets/${asset}?${cacheBust}`, { cache: 'no-store' });
@@ -69,6 +69,10 @@ try {
     assert.deepEqual(serious, [], serious.map((item) => item.id).join(', '));
     if (viewport.width === 390) {
       assert.ok(await page.locator('body').evaluate((node) => node.scrollWidth <= node.clientWidth));
+      for (const fact of await page.locator('.trust-line li').all()) {
+        const box = await fact.boundingBox();
+        assert.ok(box && box.y >= 0 && box.y + box.height <= viewport.height, `trust fact is below the first viewport: ${await fact.innerText()}`);
+      }
       await page.screenshot({ path: `${evidence}/home-390.png`, fullPage: true });
       await page.keyboard.press('Tab');
       assert.equal(await page.locator(':focus').innerText(), 'Skip to content');
@@ -99,6 +103,14 @@ try {
   assert.equal(await page.title(), 'Demo — Firebase Environment Doctor');
   assert.match(await page.locator('.demo-banner').innerText(), /nothing is saved/);
   assert.equal(await page.locator('[data-demo-output]').textContent(), expectedDemoTranscript);
+  for (const selector of ['[data-demo-verdict]', '[data-demo-selected]', '[data-demo-default]', '[data-demo-next-check]']) {
+    const box = await page.locator(selector).boundingBox();
+    assert.ok(box && box.y >= 0 && box.y + box.height <= 844, `${selector} is below the demo first viewport`);
+  }
+  assert.equal(await page.locator('[data-demo-verdict]').innerText(), 'CAUTION');
+  assert.equal(await page.locator('[data-demo-selected]').innerText(), 'sample-store-prod');
+  assert.equal(await page.locator('[data-demo-default]').innerText(), 'sample-store-dev');
+  assert.match(await page.locator('[data-demo-next-check]').innerText(), /^Confirm this project ID before/);
   assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), ['demo:firebase-environment-doctor:reset']);
   const terminal = page.locator('[data-demo-output]');
   await terminal.focus();
@@ -133,6 +145,7 @@ try {
     assert.equal(response?.status(), path === '/not-a-real-route' ? 404 : 200);
     assert.equal(await shellPage.locator('header nav a').count(), 4);
     assert.match(await shellPage.locator('footer').innerText(), /Built by Param Factory/);
+    assert.match(await shellPage.locator('footer').innerText(), /Checks Firebase projects before deploys/);
     const seriousShell = (await new AxeBuilder({ page: shellPage }).analyze()).violations.filter((item) => ['serious', 'critical'].includes(item.impact));
     assert.deepEqual(seriousShell, [], `${path}: ${seriousShell.map((item) => item.id).join(', ')}`);
   }

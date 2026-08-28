@@ -333,6 +333,10 @@ test('@claim:browser-demo-isolated @claim:browser-demo-local-requests @claim:web
     assert.match(await page.locator('[data-demo-output]').innerText(), /sample-store-prod/);
     assert.match(await page.locator('[data-demo-output]').innerText(), /sample-store-dev/);
     assert.equal(await page.locator('[data-demo-output]').textContent(), expectedTranscript);
+    assert.equal(await page.locator('[data-demo-selected]').innerText(), 'sample-store-prod');
+    assert.equal(await page.locator('[data-demo-default]').innerText(), 'sample-store-dev');
+    assert.equal(await page.locator('[data-demo-verdict]').innerText(), 'CAUTION');
+    assert.match(await page.locator('[data-demo-next-check]').innerText(), /^Confirm this project ID before/);
     await page.getByRole('button', { name: 'Reset demo' }).click();
     assert.match(await page.locator('body').innerText(), /Demo — sample data, nothing is saved/);
     assert.deepEqual([...new Set(origins)], [origin]);

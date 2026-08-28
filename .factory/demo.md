@@ -2,9 +2,11 @@
 
 The browser demo is at `/demo/?demo=1`. It opens with the bundled wrong-project
 result, displays the persistent **Demo — sample data, nothing is saved** banner,
-and has **Reset demo** and **Start for real** controls. Its only browser storage
-key is `demo:firebase-environment-doctor:reset`; Reset and Start for real remove
-that key. It never reads or writes the visitor's project data.
+and has **Reset demo** and **Start for real** controls. At 390×844, its first
+viewport shows the generated CAUTION verdict, selected `sample-store-prod`,
+project-file default `sample-store-dev`, and the first next check. Its only
+browser storage key is `demo:firebase-environment-doctor:reset`; Reset and Start
+for real remove that key. It never reads or writes the visitor's project data.
 
 The CLI path is:
 
@@ -19,8 +21,8 @@ development default (`sample-store-dev`) and a selected production-like project
 (`sample-store-prod`) so it produces a real project-context warning.
 
 `npm run build:site` runs that release command with an isolated `HOME` and an
-empty `PATH`, then puts the complete output into the demo page. The generated
-recording replaces only the unique temporary path with
-`<new temporary directory>`. The build removes its temporary recording files.
-The `browser-demo-matches-cli` claim repeats the command and compares the
-rendered transcript exactly.
+empty `PATH`, then puts the complete output and compact first-viewport result
+into the demo page. The generated recording replaces only the unique temporary
+path with `<new temporary directory>`. The build removes its temporary recording
+files. The `browser-demo-matches-cli` claim repeats the command and compares the
+rendered transcript, verdict, both project IDs, and first next check.

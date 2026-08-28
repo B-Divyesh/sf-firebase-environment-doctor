@@ -20,8 +20,10 @@ product or release gaps remain.
 
 ## Verification
 
-- Repair commit: `4b051e92ae36d02c2140a0ed525fb12b4aa5addd`.
-- Fresh clone: `/tmp/firebase-doctor-polish4.oZxTuQ/repo`, exact repair commit.
+- Repair commits: `4b051e92ae36d02c2140a0ed525fb12b4aa5addd` and
+  `39c103de12ca406e67799bc77861be825299a64e`.
+- Fresh clone: `/tmp/firebase-doctor-release.UVAF1o/repo`, exact deployed
+  commit `39c103de12ca406e67799bc77861be825299a64e`.
 - Passed: `npm ci`, `npm test`, `npm run build`, and
   `cargo package --locked`.
 - Passed independently: every `.factory/claims.json` command, `25/25`.
@@ -29,15 +31,15 @@ product or release gaps remain.
   browser/accessibility checks, and 20 claim test cases containing 25 unique
   claim tags.
 - Deployment: Azure Static Web Apps deployment
-  `b02126cb-f51b-4ba3-ba77-f1509873eaeb`.
+  `54732af7-132e-4e09-a71e-d5f2e9940b06`.
 - Live `npm run verify:live`: route and asset byte identity, response headers,
   first-screen wording, exact demo transcript, banner/reset/exit isolation,
   same-origin requests, route focus/Back, 404, legal shells, mobile geometry,
   and Axe serious/critical = 0.
-- Factory URL check: pass, 887ms observed load, no console errors. See
+- Factory URL check: pass, 824ms observed load, no console errors. See
   `.factory/evidence/polish-4/verify-url/verify.json`.
 - Mobile Lighthouse: 100 Performance, 100 Accessibility, 100 Best Practices,
-  100 SEO; FCP 1,211ms, LCP 1,361ms, TBT 0ms, CLS 0.000974. See
+  100 SEO; FCP 850ms, LCP 1,060ms, TBT 22ms, CLS 0.000974. See
   `.factory/evidence/polish-4/lighthouse-mobile.json`.
 - Live screenshots:
   `.factory/evidence/polish-4/live/home-390.png`,

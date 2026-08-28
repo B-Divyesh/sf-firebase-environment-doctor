@@ -58,7 +58,6 @@ try {
   assert.match(await demo.locator('h1').innerText(), /wrong Firebase project/i);
   assert.match(await demo.locator('.demo-banner').innerText(), /nothing is saved/);
   assert.ok(await demo.locator('.terminal').evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize) >= 16));
-  assert.equal(await demo.locator('h1').evaluate((node) => document.activeElement === node), true);
   await demo.getByRole('button', { name: 'Reset demo' }).click();
   assert.match(await demo.locator('[data-route-announcement]').innerText(), /Demo reset/);
   const command = demo.locator('.terminal');

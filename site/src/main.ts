@@ -1,20 +1,32 @@
 import './styles.css';
 
 const demoKey = 'demo:firebase-environment-doctor:reset';
+const routeFocusKey = 'firebase-environment-doctor:route-focus';
 const pageRoute = document.body.dataset.route ?? 'Page';
 const announcement = document.querySelector<HTMLElement>('[data-route-announcement]');
+const moveFocusToHeading = (() => {
+  try {
+    const requested = sessionStorage.getItem(routeFocusKey) === 'true';
+    sessionStorage.removeItem(routeFocusKey);
+    return requested;
+  } catch { return false; }
+})();
 
 if (location.pathname === '/' && new URLSearchParams(location.search).get('demo') === '1') {
   location.replace('/demo/?demo=1');
 }
 
 window.requestAnimationFrame(() => {
-  const heading = document.querySelector<HTMLElement>('main h1');
-  if (heading) {
-    heading.tabIndex = -1;
-    heading.focus({ preventScroll: true });
-  }
+  if (moveFocusToHeading) document.querySelector<HTMLElement>('main h1')?.focus({ preventScroll: true });
   if (announcement) announcement.textContent = `${pageRoute} page loaded.`;
+});
+
+document.addEventListener('click', (event) => {
+  const link = (event.target as Element).closest<HTMLAnchorElement>('a[href]');
+  if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const destination = new URL(link.href, location.href);
+  if (destination.origin !== location.origin || destination.pathname === location.pathname && destination.hash) return;
+  try { sessionStorage.setItem(routeFocusKey, 'true'); } catch { /* Navigation still works without storage. */ }
 });
 
 document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {

@@ -46,6 +46,10 @@ try {
         const size = await page.locator(selector).first().evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
         assert.ok(size >= 16, `${selector} is ${size}px`);
       }
+      const networkCommand = page.getByLabel('Optional network check command');
+      await networkCommand.focus();
+      assert.equal(await networkCommand.evaluate((node) => getComputedStyle(node).whiteSpace), 'pre');
+      assert.notEqual(await networkCommand.evaluate((node) => getComputedStyle(node).outlineColor), 'rgb(23, 36, 59)');
       const brand = await page.locator('.brand').boundingBox();
       const footer = await page.locator('.footer-links a').all();
       assert.ok(brand.width >= 44 && brand.height >= 44);

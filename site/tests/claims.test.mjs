@@ -310,6 +310,26 @@ test('@claim:build-artifacts', async () => {
   await access(new URL('../../dist/site/index.html', import.meta.url));
 });
 
+test('@claim:license-and-terms', async () => {
+  const repositoryLicense = await readFile(new URL('../../LICENSE', import.meta.url), 'utf8');
+  const publishedLicense = await readFile(new URL('../../dist/site/LICENSE.txt', import.meta.url), 'utf8');
+  const terms = await readFile(new URL('../../dist/site/terms/index.html', import.meta.url), 'utf8');
+  const readme = await readFile(new URL('../../README.md', import.meta.url), 'utf8');
+
+  assert.match(repositoryLicense, /^Copyright \(c\) 2026 Sociobot \(Param Factory\)/);
+  assert.match(repositoryLicense, /Permission is hereby granted, free of charge/);
+  assert.match(repositoryLicense, /THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND/);
+  assert.equal(publishedLicense, repositoryLicense, 'The published license must be the repository MIT license.');
+  assert.match(terms, /Firebase Environment Doctor is released under the MIT License\./);
+  assert.match(terms, /href="\/LICENSE\.txt">Read the complete MIT License<\/a>/);
+  assert.match(terms, /permissions, conditions, and warranty terms\./);
+  assert.match(readme, /^MIT\. See \[LICENSE\]\(LICENSE\)\.$/m);
+  for (const path of ['index.html', 'demo/index.html', 'privacy/index.html', 'terms/index.html', '404.html']) {
+    const page = await readFile(new URL(`../../dist/site/${path}`, import.meta.url), 'utf8');
+    assert.match(page, /Firebase Environment Doctor · MIT · v0\.1\.0/, `${path} must carry the MIT footer.`);
+  }
+});
+
 test('@claim:browser-demo-isolated @claim:browser-demo-local-requests @claim:website-no-tracking @claim:browser-demo-matches-cli', async () => {
   const origin = 'http://127.0.0.1:4174';
   const expectedTranscript = generateDemoTranscript(binary);

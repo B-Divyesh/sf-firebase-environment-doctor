@@ -127,6 +127,13 @@ visitor-facing sentence is 22 words or fewer. No banned marketing wording appear
 | This complete output is generated from firebase-environment-doctor --demo during the site build. | 12 | Claim: `browser-demo-matches-cli` |
 | This Firebase check page was not found. | 7 | Clear 404 h1 |
 | This paper slip is not on the bench. | 8 | Supporting visual copy |
+| Terms for using this Firebase check. | 6 | Clear Terms h1 |
+| Firebase Environment Doctor is released under the MIT License. | 9 | Claim: `license-and-terms` |
+| License terms | 2 | Clear Terms heading |
+| Read the complete MIT License for permissions, conditions, and warranty terms. | 11 | Claim: `license-and-terms` |
+| A diagnostic, not a guarantee | 5 | Clear Terms heading |
+| The tool reports what it can read from local configuration and optional Firebase results. | 14 | Claim: `project-input-boundaries` |
+| Review the project ID before changing cloud data or deploying configuration. | 11 | Clear safety guidance |
 | Checks Firebase projects before deploys. | 5 | Claim: `five-firebase-checks` |
 | Firebase Environment Doctor · MIT · v0.1.0 | 7 | Product and build line |
 | Built by Param Factory | 4 | Clear attribution |

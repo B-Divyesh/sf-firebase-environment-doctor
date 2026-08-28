@@ -173,5 +173,12 @@
     "where": "README develop, test, and package section",
     "test": "npm run build && node --test --test-name-pattern='@claim:build-artifacts' site/tests/claims.test.mjs",
     "sandbox": "fresh build checks dist/bin/firebase-environment-doctor and dist/site/index.html"
+  },
+  {
+    "id": "license-and-terms",
+    "claim": "The product ships under the MIT License, and the Terms page links to its complete license text.",
+    "where": "Terms page, shared footer, README license section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:license-and-terms' site/tests/claims.test.mjs",
+    "sandbox": "clean clone build compares the repository MIT LICENSE with the built /LICENSE.txt and verifies the Terms link and MIT footer"
   }
 ]

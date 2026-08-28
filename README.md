@@ -103,6 +103,7 @@ Requirements: Rust 1.85+ and Node.js 20+.
 
 ```sh
 npm install
+npm run lint
 npm test
 npm run build
 npm run build:site   # static site only -> dist/site

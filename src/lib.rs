@@ -217,10 +217,9 @@ fn select_project(
             .filter(|v| !v.trim().is_empty())
         {
             (project.trim(), "GOOGLE_CLOUD_PROJECT")
-        } else if let Some(project) = aliases.get("default") {
-            (project.as_str(), ".firebaserc (default)")
         } else {
-            return None;
+            let project = aliases.get("default")?;
+            (project.as_str(), ".firebaserc (default)")
         };
 
     let resolved = aliases

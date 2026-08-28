@@ -55,7 +55,7 @@ body {
   overflow-x: clip;
   font: 400 1rem/1.6 var(--mono);
   background-color: var(--paper);
-  background-image: url('/assets/paper-fibers.svg');
+  background-image: url('/assets/paper-fibers-71f17920.svg');
 }
 
 img { max-width: 100%; }

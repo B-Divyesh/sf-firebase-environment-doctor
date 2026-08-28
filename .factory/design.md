@@ -68,7 +68,7 @@ tabs are reduced and navigation condenses without hiding documentation.
 
 ## Asset plan and provenance
 
-The hero, `site/public/assets/doctor-diorama.webp`, is an original raster made
+The hero, `site/public/assets/doctor-diorama-dfb324dc.webp`, is an original raster made
 for this product with the factory Azure image deployment (`factory-image`) via
 `/opt/fleet/lib/gen-image.sh` on 2026-08-28, then locally resized/encoded to
 WebP. It is descriptive atmosphere, not required to understand the tool; its

@@ -80,6 +80,7 @@ test('@claim:browser-demo-isolated @claim:browser-demo-local-requests', async ()
     assert.match(await page.locator('body').innerText(), /Demo — sample data, nothing is saved/);
     assert.deepEqual([...new Set(origins)], [origin]);
     assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), []);
+    assert.deepEqual(await context.cookies(), []);
     await context.close();
   } finally {
     if (browser) await browser.close();

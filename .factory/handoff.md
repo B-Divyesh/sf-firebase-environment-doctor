@@ -1,47 +1,62 @@
-# Firebase Environment Doctor — review 5 handoff
+# Firebase Environment Doctor — round 5 handoff
 
 ## Status
 
-Adversarial review 5 is complete with verdict **FAIL**. No product code was
-modified. The review identifies one blocking demo-presentation issue, one high
-mobile first-screen issue, and three minor structure/evidence issues.
+**PASS — no known gaps.** Repair commit `a93ffd6` was deployed through the
+factory static work order as Azure Static Web Apps deployment
+`27b26f5f-099c-485f-a6ed-904c9f0777d8`.
 
-## What was done
+## What changed
 
-- Opened the live site cold in fresh 390×844 and 1440×900 contexts.
-- Exercised the one-click browser demo, Reset, Start for real, storage, request
-  origins, and the release CLI demo from an unrelated temporary directory.
-- Audited landing/README copy and corrected the word counts in the review.
-- Read and rechecked every earlier review, polish report, verification report,
-  and handoff against live behavior and current code.
-- Crawled live routes and links; checked titles, metadata, h1/main structure,
-  404 status, route focus/Back behavior, console output, and Axe results.
-- Ran every `.factory/claims.json` command independently from a clean clone.
+- The first demo viewport now contains a compact result slip generated from the
+  real `firebase-environment-doctor --demo` transcript. It shows the CAUTION
+  verdict, `sample-store-prod`, `sample-store-dev`, and first next check before
+  the complete terminal recording.
+- The 390×844 landing viewport now contains all three trust facts.
+- The designed 404 has a literal, understandable h1. Every shared footer now
+  includes the product one-liner.
+- Copy-audit counts were corrected and are now checked against the built pages
+  and README by `npm run audit:copy`.
+- The existing isolated demo, claim registry, CLI auth classification, routes,
+  metadata, focus transfer, accessible mobile behavior, privacy boundary, and
+  product-specific paper-cut visual system were reverified without regression.
 
-## Verification
-
-Clean clone: `/tmp/firebase-doctor-review5.brBD3V/repo`
+## Run and verify
 
 ```sh
 npm ci
 npm test
+npm run build
+cargo package --locked
 npm run verify:live
 ```
 
-All passed. The 25 individual claim commands passed 25/25. The full suite
-passed strict lint, 7 Rust tests, 6 site-policy tests, browser/Axe checks, and
-20 aggregate claim test cases. The live verifier passed routes, 404, metadata,
-privacy, mobile, demo, and Axe checks.
+For the packaged CLI, `cargo package --locked` produces the ready-to-publish
+crate archive; registry publishing remains a factory action. The static
+deployment artifact is `dist/site/`.
 
-## Known gaps and next steps
+## Exact evidence
 
-See `.factory/review-5.md`:
+- Clean clone: `/tmp/firebase-doctor-polish5.Zh2gTW`, commit `a93ffd6`.
+  `npm ci`, `npm test`, `npm run build`, and `cargo package --locked` all
+  passed. The suite includes strict Rust/TypeScript lint, 7 Rust integration
+  tests, 6 site-policy tests, browser/Axe checks, and 20 aggregate claim cases.
+- Every command in `.factory/claims.json` was run independently from that clean
+  clone: **`CLEAN_CLAIM_FINAL=25/25 passed`**.
+- Production `npm run verify:live` passed exact route/asset bytes, headers,
+  real 404, metadata, focus/Back behavior, demo isolation/reset, same-origin
+  requests, 390px geometry, and Axe serious/critical checks.
+- `/opt/fleet/lib/verify-url.sh` passed the live root: HTTPS 200, 645ms load,
+  title/lang, one h1, main, alt text, labeled buttons, and no console errors.
+  Evidence: `.factory/evidence/polish-5/verify-url/verify.json`.
+- Live mobile Lighthouse: Performance **100**, Accessibility **100**, Best
+  Practices **100**, SEO **100**; FCP 1.2s, LCP 1.4s, TBT 0ms, CLS 0.001.
+  Evidence: `.factory/evidence/polish-5/lighthouse-mobile.json`.
+- Screenshots: `.factory/evidence/live/home-390.png` and
+  `.factory/evidence/live/demo-390.png`.
 
-1. F-5-1 BLOCKING: place real sample result data inside the first demo viewport.
-2. F-5-2 HIGH: make all three home trust facts fully visible at 390×844.
-3. F-5-3 MINOR: make the 404 h1 literal out of context.
-4. F-5-4 MINOR: add the product one-liner to every footer.
-5. F-5-5 MINOR: regenerate and verify copy-audit word counts.
+## Known gaps
 
-After repair and deployment, repeat the full clean-clone claim matrix and the
-live mobile/desktop review. A PASS requires zero remaining findings.
+None. No offline behavior is claimed, so no offline-reload suite applies to
+this CLI/docs product. The documented local/default-network privacy boundaries
+are covered by the registered release-binary and browser interception claims.

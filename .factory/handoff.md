@@ -1,5 +1,20 @@
 # Handoff: Firebase Environment Doctor v0.1.0
 
+## Independent verification status — FAIL
+
+Verified 2026-08-28 UTC against candidate
+`c87cc660baec9948861d5a538f6161ac702f4792` and the matching live deployment
+at https://firebase-environment-doctor.sociobot.in/.
+
+The CLI workflows, package install, production build, live deployment,
+privacy, accessibility, and performance checks passed. The candidate is
+nevertheless **FAIL** because `cargo clippy --all-targets -- -D warnings`
+fails at `src/lib.rs:220` (`clippy::question_mark`). The verifier also found
+low-severity deploy hardening gaps: 30-second caching for content-hashed
+assets, no CSP/frame/permissions policies, and HSTS `preload` with a
+sub-one-year max-age. See `.factory/verification.md` for exact commands,
+results, and reproduction steps. No product code was changed by verification.
+
 ## What shipped
 
 - A Rust/clap single-binary CLI that discovers the Firebase root from any

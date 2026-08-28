@@ -53,6 +53,9 @@ try {
     assert.ok(requests.every((url) => new URL(url).origin === origin), requests.join('\n'));
     assert.deepEqual(await context.cookies(), []);
     assert.deepEqual(await page.evaluate(() => [localStorage.length, sessionStorage.length]), [0, 0]);
+    assert.equal(await page.evaluate(async () => 'serviceWorker' in navigator
+      ? (await navigator.serviceWorker.getRegistrations()).length
+      : 0), 0, 'the non-PWA site must not retain a stale service-worker cache');
     const serious = (await new AxeBuilder({ page }).analyze()).violations
       .filter((item) => ['serious', 'critical'].includes(item.impact));
     assert.deepEqual(serious, [], serious.map((item) => item.id).join(', '));

@@ -48,7 +48,8 @@ try {
       }
       const networkCommand = page.getByLabel('Optional network check command');
       await networkCommand.focus();
-      assert.equal(await networkCommand.evaluate((node) => getComputedStyle(node).whiteSpace), 'pre');
+      assert.equal(await networkCommand.evaluate((node) => node.scrollWidth <= node.clientWidth), true);
+      assert.equal(await networkCommand.locator('.command-flag').innerText(), '--network');
       assert.notEqual(await networkCommand.evaluate((node) => getComputedStyle(node).outlineColor), 'rgb(23, 36, 59)');
       const brand = await page.locator('.brand').boundingBox();
       const footer = await page.locator('.footer-links a').all();

@@ -56,9 +56,9 @@ test('landing explains the three-step Firebase project workflow', async () => {
     'Run the local check',
     'Read the project and file results',
     'Choose the optional network check',
-    'firebase-environment-doctor',
-    'firebase-environment-doctor --network'
+    'firebase-environment-doctor'
   ]) assert.match(home, new RegExp(text));
+  assert.match(home, /firebase-environment-doctor <span class="command-flag">--network<\/span>/);
   assert.match(home, /data-demo-excerpt/);
   assert.match(home, /sha256:ed1e7c11f025/);
   assert.doesNotMatch(home, /FIREBASE_DOCTOR_(DEMO_TRANSCRIPT|WORKFLOW_EXCERPT)/);

@@ -17,3 +17,10 @@ system temporary directory, runs the ordinary local diagnostic path with the
 sample production override, and prints that directory. The fixture contains a
 development default (`sample-store-dev`) and a selected production-like project
 (`sample-store-prod`) so it produces a real project-context warning.
+
+`npm run build:site` runs that release command with an isolated `HOME` and an
+empty `PATH`, then puts the complete output into the demo page. The generated
+recording replaces only the unique temporary path with
+`<new temporary directory>`. The build removes its temporary recording files.
+The `browser-demo-matches-cli` claim repeats the command and compares the
+rendered transcript exactly.

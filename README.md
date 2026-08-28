@@ -61,7 +61,8 @@ firebase-environment-doctor --demo
 
 The command copies the bundled project to a new temporary directory and prints
 that directory. The sample selects `sample-store-prod` while its project file
-defaults to `sample-store-dev`.
+defaults to `sample-store-dev`. The website transcript is generated from this
+release command during every site build.
 
 ## What network mode runs
 

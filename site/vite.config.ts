@@ -1,5 +1,36 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import { generateDemoTranscript } from '../scripts/demo-transcript.mjs';
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+function demoRecording() {
+  let transcript: string | undefined;
+  return {
+    name: 'firebase-doctor-demo-recording',
+    transformIndexHtml: {
+      order: 'pre' as const,
+      handler(html: string, context: { filename: string }) {
+        const transcriptMarker = '{{FIREBASE_DOCTOR_DEMO_TRANSCRIPT}}';
+        const excerptMarker = '{{FIREBASE_DOCTOR_WORKFLOW_EXCERPT}}';
+        if (!html.includes(transcriptMarker) && !html.includes(excerptMarker)) return html;
+        transcript ??= generateDemoTranscript(resolve(__dirname, '../target/release/firebase-environment-doctor'));
+        const excerpt = transcript
+          .split('\n')
+          .filter((line) => /^(Project|Rules|Verdict)\s|^  \[warn\] --project/.test(line))
+          .join('\n');
+        return html
+          .replace(transcriptMarker, escapeHtml(transcript))
+          .replace(excerptMarker, escapeHtml(excerpt));
+      }
+    }
+  };
+}
 
 export default defineConfig({
   root: resolve(__dirname),
@@ -18,5 +49,6 @@ export default defineConfig({
         notFound: resolve(__dirname, '404.html')
       }
     }
-  }
+  },
+  plugins: [demoRecording()]
 });

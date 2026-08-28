@@ -49,6 +49,33 @@ test('demo, sitemap, and designed 404 are emitted', async () => {
   assert.match(notFound, /This paper slip is not on the bench/);
 });
 
+test('landing explains the three-step Firebase project workflow', async () => {
+  const home = await readFile(new URL('index.html', output), 'utf8');
+  for (const text of [
+    'How to check a Firebase project',
+    'Run the local check',
+    'Read the project and file results',
+    'Choose the optional network check',
+    'firebase-environment-doctor',
+    'firebase-environment-doctor --network'
+  ]) assert.match(home, new RegExp(text));
+  assert.match(home, /data-demo-excerpt/);
+  assert.match(home, /sha256:ed1e7c11f025/);
+  assert.doesNotMatch(home, /FIREBASE_DOCTOR_(DEMO_TRANSCRIPT|WORKFLOW_EXCERPT)/);
+});
+
+test('every registered claim has one tagged test and a runnable command', async () => {
+  const claims = JSON.parse(await readFile(new URL('../../.factory/claims.json', import.meta.url), 'utf8'));
+  const claimTests = await readFile(new URL('claims.test.mjs', import.meta.url), 'utf8');
+  assert.equal(new Set(claims.map((claim) => claim.id)).size, claims.length);
+  for (const claim of claims) {
+    const tag = `@claim:${claim.id}`;
+    assert.equal(claimTests.split(tag).length - 1, 1, `${tag} must tag exactly one test`);
+    assert.match(claim.test, new RegExp(`--test-name-pattern=['\"]${tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['\"]`));
+    assert.ok(claim.sandbox.length > 20, `${claim.id} needs a concrete sandbox`);
+  }
+});
+
 test('performance asset budgets and original share art are respected', async () => {
   const assets = new URL('assets/', output);
   const files = await readdir(assets);

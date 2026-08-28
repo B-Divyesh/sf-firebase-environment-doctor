@@ -49,9 +49,11 @@ lifted diagnostic slips. Corners use clipped/chamfered geometry rather than the
 rounded-card default. Fine dashed “cut” rules show routes between checks.
 
 Desktop hero is an editorial spread: copy left, illustration right, with the
-diagnostic tape crossing their boundary. At 390px it becomes a single story:
-headline, primary install action, illustration, then demo. Decorative paper
-tabs are reduced and navigation condenses without hiding documentation.
+diagnostic tape crossing their boundary. The workflow continues as three
+staggered inspection slips connected by a dashed bench route. At 390px it
+becomes a single story: headline, sample action, illustration, then stacked
+workflow steps. Decorative paper tabs are reduced and navigation condenses
+without hiding documentation.
 
 ## Interaction grammar and motion
 

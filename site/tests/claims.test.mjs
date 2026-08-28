@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { chromium } from 'playwright';
+import { generateDemoTranscript } from '../../scripts/demo-transcript.mjs';
 
 const binary = new URL('../../dist/bin/firebase-environment-doctor', import.meta.url).pathname;
 const fixture = (name) => `tests/fixtures/${name}`;
@@ -309,8 +310,9 @@ test('@claim:build-artifacts', async () => {
   await access(new URL('../../dist/site/index.html', import.meta.url));
 });
 
-test('@claim:browser-demo-isolated @claim:browser-demo-local-requests @claim:website-no-tracking', async () => {
+test('@claim:browser-demo-isolated @claim:browser-demo-local-requests @claim:website-no-tracking @claim:browser-demo-matches-cli', async () => {
   const origin = 'http://127.0.0.1:4174';
+  const expectedTranscript = generateDemoTranscript(binary);
   const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--config', 'site/vite.config.ts', '--host', '127.0.0.1', '--port', '4174', '--strictPort'], { stdio: 'ignore' });
   let browser;
   try {
@@ -330,6 +332,7 @@ test('@claim:browser-demo-isolated @claim:browser-demo-local-requests @claim:web
     assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), ['demo:firebase-environment-doctor:reset']);
     assert.match(await page.locator('[data-demo-output]').innerText(), /sample-store-prod/);
     assert.match(await page.locator('[data-demo-output]').innerText(), /sample-store-dev/);
+    assert.equal(await page.locator('[data-demo-output]').textContent(), expectedTranscript);
     await page.getByRole('button', { name: 'Reset demo' }).click();
     assert.match(await page.locator('body').innerText(), /Demo — sample data, nothing is saved/);
     assert.deepEqual([...new Set(origins)], [origin]);

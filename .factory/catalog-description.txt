@@ -1,1 +1,1 @@
-Check a Firebase project before a deploy.
+Check Firebase project settings before a deploy.

@@ -30,13 +30,19 @@ try {
     assert.equal(await page.locator('h1').count(), 1);
     assert.equal(await page.locator('main').count(), 1);
     assert.match(await page.locator('h1').innerText(), /Check your Firebase project before a deploy/);
+    assert.equal(await page.locator('.workflow-steps > li').count(), 3);
+    assert.deepEqual(await page.locator('.workflow-steps h3').allInnerTexts(), [
+      'Run the local check',
+      'Read the project and file results',
+      'Choose the optional network check'
+    ]);
     assert.equal(consoleErrors.length, 0, consoleErrors.join('\n'));
     const results = await new AxeBuilder({ page }).analyze();
     const serious = results.violations.filter((item) => ['serious', 'critical'].includes(item.impact));
     assert.deepEqual(serious, [], serious.map((item) => `${item.id}: ${item.help}`).join('\n'));
     if (viewport.width === 390) {
       assert.ok(await page.locator('body').evaluate((node) => node.scrollWidth <= node.clientWidth));
-      for (const selector of ['.small-note', '.safety-list span', '.checks p', '.command .button']) {
+      for (const selector of ['.small-note', '.safety-list span', '.workflow-steps p', '.workflow-index', '.workflow-output', '.checks p', '.command .button']) {
         const size = await page.locator(selector).first().evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize));
         assert.ok(size >= 16, `${selector} is ${size}px`);
       }

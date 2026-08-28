@@ -56,6 +56,13 @@
     "sandbox": "fresh browser context intercepts every request during the demo flow"
   },
   {
+    "id": "browser-demo-matches-cli",
+    "claim": "The browser demo shows the complete normalized output from the release CLI demo.",
+    "where": "demo introduction and terminal recording, README sample section",
+    "test": "npm run build && node --test --test-name-pattern='@claim:browser-demo-matches-cli' site/tests/claims.test.mjs",
+    "sandbox": "release binary --demo with an empty PATH and isolated HOME; compare its normalized output exactly with the rendered browser transcript"
+  },
+  {
     "id": "website-no-tracking",
     "claim": "The website uses no analytics, advertising, cookies, or third-party scripts.",
     "where": "privacy page",

@@ -164,6 +164,45 @@ h3 { margin-bottom: 8px; font-size: 1.45rem; font-weight: 620; }
 .section-heading { max-width: 720px; margin-bottom: 48px; }
 .section-heading p { max-width: 66ch; color: var(--ink-muted); }
 
+.workflow { position: relative; }
+.workflow::before {
+  content: '';
+  position: absolute;
+  top: 184px;
+  bottom: 112px;
+  left: 58px;
+  border-left: 2px dashed rgba(23, 36, 59, .3);
+}
+.workflow-steps { display: grid; max-width: 900px; gap: 18px; padding: 0; margin: 0; list-style: none; }
+.workflow-steps li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 24px;
+  padding: 26px 30px;
+  border: 1px solid rgba(23, 36, 59, .32);
+  background: rgba(255, 249, 239, .72);
+  box-shadow: 6px 7px 0 var(--cut-shadow);
+  clip-path: polygon(0 0, 97% 0, 100% 18%, 100% 100%, 2% 100%, 0 88%);
+}
+.workflow-steps li:nth-child(2) { margin-left: 42px; }
+.workflow-steps li:nth-child(3) { margin-left: 84px; }
+.workflow-index { color: var(--ember-deep); font-size: 1rem; font-weight: 600; }
+.workflow-steps h3 { margin-bottom: 8px; }
+.workflow-steps p { max-width: 58ch; margin: 0; color: var(--ink-muted); }
+.workflow-command,
+.workflow-output {
+  max-width: 100%;
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  overflow: auto;
+  color: #f8f2e7;
+  background: var(--ink);
+  font: 400 1rem/1.6 var(--mono);
+  white-space: pre-wrap;
+}
+.workflow-output { border-left: 5px solid #e27f50; }
+
 .demo-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 32px; align-items: start; }
 .demo-grid > *, .install-sheet > * { min-width: 0; }
 .case-tabs { display: grid; gap: 12px; }
@@ -260,6 +299,9 @@ h3 { margin-bottom: 8px; font-size: 1.45rem; font-weight: 620; }
   .diorama figcaption { position: static; display: inline-block; margin-top: 10px; }
   .safety-list { grid-template-columns: 1fr; gap: 14px; }
   .section { padding: 80px 0; }
+  .workflow::before { display: none; }
+  .workflow-steps li { grid-template-columns: 1fr; gap: 8px; padding: 24px 20px; }
+  .workflow-steps li:nth-child(2), .workflow-steps li:nth-child(3) { margin-left: 0; }
   .demo-grid { grid-template-columns: 1fr; }
   .case-tabs { display: flex; max-width: 100%; overflow-x: auto; padding: 4px 3px 10px; scroll-snap-type: x mandatory; }
   .case-tabs button { min-width: 188px; scroll-snap-align: start; }

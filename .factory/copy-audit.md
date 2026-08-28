@@ -1,4 +1,4 @@
-# Copy audit — 2026-08-28, polish 3
+# Copy audit — 2026-08-28, polish 4
 
 Commands, option names, terminal output, the product name, and the decorative
 check mark are excluded from sentence counts. Every visitor-facing sentence is
@@ -29,6 +29,17 @@ check mark are excluded from sentence counts. Every visitor-facing sentence is
 | --network runs read-only Firebase account and project checks. | 7 | Claim: `read-only-firebase-commands` |
 | Reports hide credentials | 3 | Clear heading |
 | Cards and JSON omit credential values. | 6 | Claim: `credential-values-hidden` |
+| How it works | 3 | Clear label |
+| How to check a Firebase project | 6 | Clear workflow heading |
+| Start with local files. | 4 | Claim: `local-check-runs-locally` |
+| Add the network check only when you need Firebase access confirmed. | 11 | Claim: `project-access` |
+| Run the local check | 4 | Verb-led step |
+| Open a Firebase project directory and run. | 7 | Clear instruction |
+| Read the project and file results | 6 | Verb-led step |
+| Confirm the selected project. | 4 | Clear instruction |
+| Then follow the next check for each finding. | 8 | Claim: `next-step-guidance` |
+| Choose the optional network check | 5 | Verb-led step |
+| Use this only when you want the tool to check Firebase access. | 12 | Claim: `project-access` |
 | Check five Firebase settings. | 5 | Claim: `five-firebase-checks` |
 | The tool reads your project files and Firebase CLI results. | 10 | Claim: `project-input-boundaries` |
 | It tells you what to check next. | 7 | Claim: `next-step-guidance` |
@@ -84,6 +95,7 @@ check mark are excluded from sentence counts. Every visitor-facing sentence is
 | Run the same sample shown on the website. | 8 | Claims: `cli-demo-isolated`, `browser-demo-isolated` |
 | The command copies the bundled project to a new temporary directory and prints that directory. | 14 | Claim: `cli-demo-isolated` |
 | The sample selects sample-store-prod while its project file defaults to sample-store-dev. | 12 | Claims: `cli-demo-isolated`, `browser-demo-isolated` |
+| The website transcript is generated from this release command during every site build. | 12 | Claim: `browser-demo-matches-cli` |
 | With --network, the tool runs these read-only Firebase commands. | 9 | Claim: `read-only-firebase-commands` |
 | The project check requires a listed Firebase account and checks project access. | 11 | Claim: `network-account-and-project-access` |
 | It reports sign-in, permission, and network failures separately. | 8 | Claim: `network-failure-classification` |

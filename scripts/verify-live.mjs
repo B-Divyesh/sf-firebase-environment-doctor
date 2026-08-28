@@ -2,10 +2,12 @@ import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdir, readFile, readdir } from 'node:fs/promises';
+import { generateDemoTranscript } from './demo-transcript.mjs';
 
 const origin = (process.env.VERIFY_URL ?? 'https://firebase-environment-doctor.sociobot.in').replace(/\/$/, '');
-const cacheBust = `polish-2-${Date.now()}`;
+const cacheBust = `polish-4-${Date.now()}`;
 const evidence = process.env.EVIDENCE_DIR ?? '.factory/evidence/live';
+const expectedDemoTranscript = generateDemoTranscript('dist/bin/firebase-environment-doctor');
 await mkdir(evidence, { recursive: true });
 
 function verifySecurityHeaders(headers) {
@@ -49,6 +51,12 @@ try {
     assert.equal(await page.title(), 'Firebase Environment Doctor — Check Firebase projects');
     assert.equal(await page.locator('h1').count(), 1);
     assert.equal(await page.locator('main').count(), 1);
+    assert.equal(await page.locator('.workflow-steps > li').count(), 3);
+    assert.deepEqual(await page.locator('.workflow-steps h3').allInnerTexts(), [
+      'Run the local check',
+      'Read the project and file results',
+      'Choose the optional network check'
+    ]);
     assert.deepEqual(errors, []);
     assert.ok(requests.every((url) => new URL(url).origin === origin));
     assert.deepEqual(await context.cookies(), []);
@@ -75,7 +83,7 @@ try {
   await page.goto(`${origin}/demo/?demo=1&${cacheBust}`, { waitUntil: 'networkidle' });
   assert.equal(await page.title(), 'Demo — Firebase Environment Doctor');
   assert.match(await page.locator('.demo-banner').innerText(), /nothing is saved/);
-  assert.match(await page.locator('[data-demo-output]').innerText(), /sample-store-prod/);
+  assert.equal(await page.locator('[data-demo-output]').textContent(), expectedDemoTranscript);
   await page.getByRole('button', { name: 'Reset demo' }).click();
   assert.deepEqual(await page.evaluate(() => Object.keys(localStorage)), []);
   assert.ok(requests.every((url) => new URL(url).origin === origin));

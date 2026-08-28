@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#F4EBDD">
+    <meta name="description" content="Privacy policy for Firebase Environment Doctor.">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <title>Privacy — Firebase Environment Doctor</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="shell site-header">
+      <a class="brand" href="/" aria-label="Firebase Environment Doctor home"><span class="brand-mark" aria-hidden="true">✓</span><span>Firebase Environment Doctor</span></a>
+      <nav aria-label="Primary navigation"><a href="/">Home</a><a href="/terms/">Terms</a></nav>
+    </header>
+    <main id="main" class="shell legal">
+      <p class="eyebrow">Last updated 28 August 2026</p>
+      <h1>Privacy, kept local.</h1>
+      <p>Firebase Environment Doctor does not collect, transmit, or sell personal data. The CLI has no telemetry. Its default checks read files and environment metadata on your computer and write nothing.</p>
+      <h2>Optional network checks</h2>
+      <p>Network checks run only when you pass <code>--network</code>. The CLI then invokes the documented <code>firebase login:list --json</code> and <code>firebase projects:list --json</code> commands. Those requests are handled by Firebase under your existing CLI configuration. The doctor uses the results to report login validity and project visibility; it does not print or retain tokens.</p>
+      <h2>Website</h2>
+      <p>This website has no analytics, advertising, cookies, local storage, third-party scripts, or form submission. The diagnostic demo uses static examples in your browser and sends no data.</p>
+      <h2>Your control</h2>
+      <p>Do not use <code>--network</code> if you want fully offline operation. Remove the binary to uninstall it; the doctor creates no account and stores no profile.</p>
+    </main>
+    <footer class="shell site-footer"><span>Firebase Environment Doctor · MIT licensed</span><div class="footer-links"><a href="/">Home</a><a href="/terms/">Terms</a></div></footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

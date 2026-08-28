@@ -1,0 +1,26 @@
+{
+  "name": "firebase-environment-doctor-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config site/vite.config.ts",
+    "test": "cargo test && npm run test:site && npm run test:a11y",
+    "test:site": "npm run build:site && node --test site/tests/*.test.mjs",
+    "test:a11y": "node site/tests/browser.mjs",
+    "build": "cargo build --release && npm run build:site && node scripts/copy-binary.mjs",
+    "build:site": "vite build --config site/vite.config.ts",
+    "preview": "vite preview --config site/vite.config.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@fontsource-variable/fraunces": "5.2.8",
+    "@fontsource/ibm-plex-mono": "5.2.7",
+    "playwright": "1.58.2",
+    "typescript": "5.9.2",
+    "vite": "7.3.6"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -5,3 +5,4 @@ dist/
 *.log
 graphify-out/
 .DS_Store
+.factory/evidence/

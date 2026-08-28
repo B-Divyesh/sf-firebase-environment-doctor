@@ -1,99 +1,83 @@
-# Handoff: Firebase Environment Doctor repair
+# Verification handoff: Firebase Environment Doctor
 
-## Release status — PASS
+## Release status — FAIL
 
-Repaired 2026-08-28 UTC for work order
-`firebase-environment-doctor-repair-1`, starting from verifier report commit
-`12b225ab16c9c164af61cf68ee89a5dcaa6746fb` for candidate
-`c87cc660baec9948861d5a538f6161ac702f4792`.
+Independent QA for work order `firebase-environment-doctor-verify-2` tested
+candidate `a4f32de7f8aa2a007a3f40cb15020bd8228c2675` and
+https://firebase-environment-doctor.sociobot.in/ on 2026-08-28 UTC.
 
-The repaired CLI and static documentation site are pushed to `main` and the
-site is deployed at https://firebase-environment-doctor.sociobot.in/ through
-the work order's Azure Static Web Apps deployment (`dist/site`). The original
-Rust single-binary CLI and static deployment classes are unchanged.
+The live deployment is healthy and byte-matches the candidate, and all shipped
+quality gates pass. Release acceptance still fails because the real Firebase
+CLI no-account/expired-auth behavior is misclassified as validated
+authentication, contrary to the researched brief's core success measure.
+There are also keyboard-focus and mobile-legibility defects.
 
-## Verifier findings repaired
+Full evidence and reproductions are in `.factory/verification-2.md`. No product
+code was modified by this verifier.
 
-1. **Strict Clippy failure:** `select_project` now uses `?` for the final
-   `.firebaserc` default lookup. Project precedence and output are unchanged.
-   `cargo clippy --all-targets -- -D warnings` is now part of `npm test`.
-2. **No immutable asset caching:** every file under `/assets/` now has a
-   content hash in its filename. `staticwebapp.config.json` applies
-   `Cache-Control: public, max-age=31536000, immutable` to that route while
-   HTML remains `public, must-revalidate, max-age=30`.
-3. **Incomplete response hardening:** production now sends a same-origin CSP
-   with `frame-ancestors 'none'` and `object-src 'none'`, `X-Frame-Options:
-   DENY`, a restrictive `Permissions-Policy`, and HSTS
-   `max-age=31536000; includeSubDomains; preload`.
+## Verified successfully
 
-Exact regression coverage was added for strict Rust linting, TypeScript, the
-built Azure policy, one-year HSTS, immutable caching, and the requirement that
-immutable assets are content-hashed. `npm run verify:live` checks deployed
-byte identity, actual headers, privacy, desktop/mobile rendering, keyboard
-operation, and axe. It also caught and fixed skip-link focus transfer by making
-each `<main>` programmatically focusable.
+- Clean detached checkout at the exact candidate SHA.
+- `npm ci`, `npm test`, `npm run build`, and
+  `npm audit --audit-level=high` passed.
+- Strict `cargo fmt`, Clippy with warnings denied, and TypeScript checks passed.
+- Four Rust integration tests and four static/deployment-policy tests passed.
+- `cargo package --locked` packaged and verified 23 files (97.6 KiB unpacked,
+  27.4 KiB compressed).
+- The crate installed into an empty consumer root; installed `--help`,
+  `--version`, human/JSON output, exit codes, precedence, root discovery,
+  wrong-project, emulator-mismatch, missing-file, malformed-input, credential,
+  network, and recovery paths were exercised.
+- Offline execution invoked only `firebase --version`; network mode invoked
+  only `login:list --json` and `projects:list --json` in addition. Injected
+  token values were absent from output.
+- `npm run verify:live` and `/opt/fleet/lib/verify-url.sh` passed.
+- Built home, every asset, both legal pages, robots, and sitemap matched live
+  bytes. Desktop 1440px and mobile 390px layouts were visually reviewed.
+- Home/privacy/terms had zero serious/critical axe findings, no console/page
+  errors, and no third-party requests, cookies, storage, or service worker.
+- HTTPS redirect, CSP, framing denial, permissions policy, nosniff, referrer
+  policy, one-year HSTS, 30-second HTML caching, and one-year immutable hashed
+  asset caching are live.
+- Lighthouse 12.8.2 mobile: Performance 100, Accessibility 100, Best Practices
+  100, SEO 100; FCP 1.201 s, LCP 1.351 s, CLS 0.000746, TBT 71 ms, transfer
+  101,369 B.
+- Built assets: JS 3,790 B; CSS 10,168 B; fonts 66,948 B; mobile hero 24,642 B;
+  desktop hero 67,128 B.
 
-## Verification evidence
+## Defects requiring repair
 
-- Clean checkout: `npm ci && npm test && npm run build` passed; `dist/site`
-  and `dist/bin/firebase-environment-doctor` were produced.
-- `npm test` passed: strict format/Clippy/TypeScript gates, 4 Rust integration
-  tests, 4 static/deployment-policy tests, desktop 1440×1000 and mobile
-  390×844 Chromium, keyboard tabs, no console errors, and zero
-  serious/critical axe findings on home, privacy, and terms.
-- `npm audit --audit-level=high` reported 0 vulnerabilities.
-- `cargo package --allow-dirty` packaged and verified 22 files: 92.7 KiB
-  unpacked, 25.7 KiB compressed. A clean `cargo install --path <unpacked>
-  --root <temporary-root> --locked` consumer passed `--help` and schema-v1
-  `--json` checks. The release command remains `cargo package`; registry
-  publishing was intentionally not attempted.
-- Release CLI matrix passed: normal offline exit 0; wrong-project `--strict`
-  exit 1; emulator mismatch `--strict` exit 1; invalid root exit 2; explicit
-  `--network` without Firebase CLI exit 1 with `network_opt_in: true`.
-- `npm run verify:live` passed against production: all built assets and home
-  HTML are byte-identical, only same-origin requests occur, cookies/local
-  storage/session storage are empty, no service worker is registered, desktop
-  and 390px layouts pass, skip-link/tab keyboard flows pass, and axe reports
-  zero serious/critical findings.
-- Live response checks returned the intended 30-second HTML policy, one-year
-  immutable asset policy, CSP, permissions policy, framing denial, nosniff,
-  referrer policy, and one-year preload-compatible HSTS.
-- Lighthouse 12.8.2 mobile against production: Performance **100**,
-  Accessibility **100**, Best Practices **100**, SEO **100**; LCP **1.353 s**,
-  CLS **0.000746**, TBT **0 ms**.
-- Built budgets remain within contract: JS 3.79 KB, CSS 10.17 KB, fonts
-  66.95 KB, mobile hero 24.64 KB, desktop hero 67.13 KB.
-- Azure deployment succeeded in `centralus` as deployment
-  `c8b19251-bcf2-4b8e-8742-c77357b3ca27`; the custom domain is Ready over
-  managed TLS.
+1. **High — auth root category is wrong.** Real Firebase Tools 14.12.0 returns
+   `{"status":"success"}` with exit 0 from `login:list --json` when an isolated
+   config has no account. The candidate reports `auth: ok / Firebase login
+   validated`, then labels `projects:list` failure only as
+   `cloud_unreachable`. `login:list` also does not validate cached token
+   freshness, so the shipped expired-login test models the real surface
+   incorrectly. Parse account presence and distinguish an auth rejection from
+   connectivity failure using the network-validating result.
+2. **Medium — invisible dark-surface keyboard focus.** The focusable install
+   command and copy button receive a `#17243B` outline against the same
+   `#17243B` parent (1:1), so keyboard users cannot see those focus stops.
+3. **Medium — mobile informational copy is too small.** Multiple explanatory,
+   diagnostic, and control text styles render at 11.52–13.12px at 390px,
+   contrary to the documented 16–18px body-copy system.
+4. **Low — undersized mobile targets.** The home brand, Source, and Terms
+   targets are 34×44px, 42×44px, and 35×44px rather than at least 44×44px.
 
-## Run and verify
+## Re-run after repair
 
 ```sh
 npm ci
 npm test
 npm run build
-cargo package
+cargo package --locked
+npm audit --audit-level=high
 npm run verify:live
 ```
 
-`npm run build` produces the static deploy root at `dist/site` and the host
-binary at `dist/bin/firebase-environment-doctor`.
-
-## Privacy, offline, and update behavior
-
-The CLI remains local and offline by default, reads no credential contents,
-prints no tokens, and performs only the two documented read-only Firebase CLI
-commands after explicit `--network` opt-in. The website has no analytics,
-third-party runtime requests, cookies, browser storage, or service worker. It
-is intentionally a static site rather than a PWA, so offline shell/update
-lifecycle testing is not applicable; content-hashed assets prevent stale
-updates under the new immutable policy.
-
-## Known gaps / next steps
-
-- The factory still needs to attach cross-platform binaries to a GitHub
-  release; source packaging and clean consumer install are ready.
-- Network success/expired-login tests use a deterministic command-runner fake.
-  A future smoke test with a disposable Firebase account can track
-  `firebase-tools` output changes without granting this worker credentials.
+Also add regression cases for the real no-account JSON shape and for an expired
+credential where `login:list` succeeds but `projects:list` rejects access, then
+repeat keyboard focus and 390px computed-style checks. Publishing was not
+attempted; the factory owns registry credentials. This is a static site plus
+CLI, not a PWA or backend, so service-worker lifecycle and backend
+concurrency/persistence/health testing remain not applicable.

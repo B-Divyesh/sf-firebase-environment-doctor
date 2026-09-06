@@ -1,70 +1,118 @@
-# Review 8 handoff — Check Firebase projects before risky commands
+# Repair 2 handoff — Firebase Environment Doctor
 
 ## Result
 
-**FAIL.** Review 8 found three issues: one high-severity claim-test gap and two
-minor live-site contract gaps. The full evidence and required changes are in
-`.factory/review-8.md`.
+**PASS.** The three Review 8 findings and its one incomplete claim test are
+repaired, committed, pushed, and deployed to
+<https://firebase-environment-doctor.sociobot.in>.
 
-Implementation candidate:
-`79f19a72f48cfa3e3ca223340cb88aa504e53dea`. Documentation SHA before this
-report: `75bd3be6085c2c6b32245b943433c62f25d87051`. Live pages and assets matched
-the implementation candidate byte-for-byte.
+**Implementation SHA:** `f9f9247b4d903375d03fedb9d2ba711da007c531`
 
-## What was checked
+The documentation handoff is committed separately after this implementation.
+There is no paid offer: the researched product remains a free local CLI, so no
+billing metadata is needed.
 
-- Fresh phone and desktop live contexts, one-click sample, reset, exit, storage,
-  cookies, requests, keyboard, route focus, reduced motion, legal pages, links,
-  titles, and designed HTTP 404.
-- Clean candidate checkout with `npm ci`, `npm test`, `npm run build`,
-  `cargo package --locked`, copy audit, live verifier, and all 26 declared claim
-  commands run separately.
-- Clean consumer installs from the local checkout and the documented Git URL,
-  followed by help, version, sample, JSON, invalid-input, recovery, boundary,
-  and network-classification paths.
-- Full Axe scans on five routes at phone and desktop widths, the factory URL
-  verifier, and mobile Lighthouse.
-- Every finding from reviews 1–7 and both earlier verification reports.
+## What changed
 
-## Findings to repair
+- The `credential-values-hidden` claim now runs the release CLI in both its
+  ordinary diagnostic-card mode and `--json` mode. A fake Firebase CLI returns
+  a sentinel in an account token field and an authentication error. The test
+  proves the sentinel and raw token field are absent from stdout and stderr in
+  both formats, while retaining the observable sign-in result.
+- Navigation links now have a 44px minimum width and height. The Terms license
+  link has a 44px-high clickable area. Local and live browser tests measure
+  every rendered link and button on all five phone routes rather than selected
+  examples.
+- The 404 page now explains that the page address does not match a Firebase
+  project check page. The paper-slip sentence is removed. The copy audit now
+  rejects prohibited marketing and metaphor-only status wording.
+- `.factory/catalog-description.txt` remains the verb-first 44-character
+  description, “Check Firebase projects before you deploy.” It was copied to
+  `/work/.evidence/catalog-description.txt`.
 
-1. Extend `@claim:credential-values-hidden` to test both the default text card
-   and JSON with a sentinel credential value.
-2. Raise the live header Demo link and Terms license link to at least 44×44 CSS
-   pixels, then test all phone links and buttons.
-3. Remove or replace “This paper slip is not on the bench.” on the 404 page and
-   update the copy audit.
+## Verification
 
-## Verification results
-
-- Declared claim commands: 26 exited 0; 25 completely proved; 1 incomplete.
-- `npm test`: PASS.
-- `npm run build`: PASS; `dist/bin/` and `dist/site/` produced.
-- `cargo package --locked`: PASS; 29 files, 30.8 KiB compressed.
-- `npm run verify:live`: PASS for candidate identity and covered behavior.
-- Axe: 0 violations at 390×844 and 1440×1000 across Home, Demo, Privacy,
-  Terms, and 404.
-- Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100,
-  SEO 100; LCP 1.35s, TBT 0ms, CLS 0.00097.
-- `verify-url.sh`: PASS; 678ms load and no console errors.
-
-## How to repeat
+From a fresh clone of `f9f9247` in
+`/tmp/firebase-doctor-clean.oHDrrl/repo`:
 
 ```sh
 npm ci
 npm test
 npm run build
 cargo package --locked
-npm run audit:copy
+```
+
+All commands passed. The serial clean-sandbox claim matrix ran every command
+in `.factory/claims.json` independently: **26/26 passed**.
+
+The pushed Git consumer artifact installed from
+`https://github.com/B-Divyesh/sf-firebase-environment-doctor.git#f9f9247b`.
+Its help, version, bundled sample, parseable JSON, invalid-input exit 2, and
+recovery with the bundled project all passed.
+
+The durable existing Static Web App was reused and deployed from `dist/site/`.
+`npm run verify:live` passed after deployment: exact published page/asset
+identity, response headers, designed HTTP 404, demo isolation/reset, request
+privacy, mobile geometry, route focus/Back behavior, and Playwright Axe scans.
+
+The factory URL verifier passed live with a 631ms load, no console errors, a
+title, `lang`, one h1, main landmark, image alt text, and named buttons.
+Evidence is under `/work/.evidence/firebase-environment-doctor-repair-2/`.
+
+Fresh phone (390×844) and desktop (1440×1000) contexts, before scrolling,
+both identified:
+
+- Job: Check a Firebase project before a deploy.
+- Audience: Firebase developers catching wrong projects, sign-in issues,
+  emulator mismatches, or missing rules files before changing cloud data.
+- First action: **Try sample project check**; it shows a wrong-project result
+  in the browser.
+
+The one-click demo shows the populated CAUTION result, `sample-store-prod`,
+`sample-store-dev`, and the next check in the initial phone viewport. The
+persistent demo label, Reset demo, Start for real, demo-only storage, reset,
+and no-real-data boundary passed the browser checks.
+
+Live mobile Lighthouse 12.8.2 (with the supplied local Chromium and full-page
+screenshot disabled) scored Performance **100**, Accessibility **100**, Best
+Practices **100**, and SEO **100**. FCP was 1.2s, LCP 1.4s, TBT 0ms, and CLS
+0.001. The JSON report is saved with the verifier evidence.
+
+## Earlier finding disposition
+
+| Earlier findings | Current disposition |
+| --- | --- |
+| F-1-1, F-2-1, F-4-1, F-5-1 | Fixed: real isolated CLI/browser demo, exact transcript, immediate populated mobile result, reset, and exit. |
+| F-1-2, F-2-2, F-3-2, F-6-1 | Fixed: all visitor reliance claims, including Terms, have exactly one tagged clean-sandbox test. |
+| F-1-3, F-2-3, verification-2 auth | Fixed: no-account, expired sign-in, permission, and network failures are classified separately without exposing raw output. |
+| F-1-4, F-2-4, F-5-2, F-1-9 | Fixed: job, audience, first action, outcome, three phone facts, plain wording, and copy audit pass. |
+| F-1-5, F-2-5, F-3-1, F-3-3, F-5-3 | Fixed: real routes, metadata, focus handoff, Back behavior, and designed HTTP 404. |
+| F-1-6 | Fixed: canonical, original share art, favicon, and Apple touch metadata are present. |
+| F-1-7, F-2-6, verification-2 focus/type/targets | Fixed: visible focus, 16px relevant phone copy, and every measured phone link/button is at least 44×44px. |
+| F-1-8, F-5-4 | Fixed: shared header/footer, legal navigation, product line, version, and Param Factory credit. |
+| Verification 1 lint/cache/headers | Fixed: strict lint, immutable hashed-asset caching, CSP, framing, permissions policy, and one-year HSTS remain verified. |
+| Review 8 F-8-1 | Fixed: credential-redaction claim covers text cards and JSON, stdout and stderr. |
+| Review 8 F-8-2 | Fixed: header Demo and Terms license targets meet 44×44px; every rendered target is measured. |
+| Review 8 F-8-3 | Fixed: the 404 contains only direct page-address guidance and the copy audit rejects the removed metaphor. |
+
+## Scope and remaining gaps
+
+There are no known product gaps. This is a static documentation site and a
+local CLI: SQLite, backend tenant isolation, restart persistence, health
+endpoints, rate limiting, offline/update behavior, and AI integrations do not
+apply or are not promised. No analytics, cookies, third-party scripts, or
+external fonts are used.
+
+## Repeat commands
+
+```sh
+npm ci
+npm test
+npm run build
+cargo package --locked
 npm run verify:live
 ```
 
-Then run each command in `.factory/claims.json` separately and inspect every
-phone link/button, not only the targets currently covered by the browser test.
-
-## Scope notes
-
-No product code was changed. The product is a static site and local CLI, so
-backend tenancy, restart persistence, health, rate limiting, and SQLite do not
-apply. No offline promise exists. No AI feature is appropriate for this
-deterministic read-only check.
+Then run every `test` command in `.factory/claims.json` separately. To package
+without publishing, run `cargo package --locked`; registry publishing remains
+the factory operator's responsibility.

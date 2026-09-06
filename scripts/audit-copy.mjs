@@ -28,6 +28,10 @@ function tokenCount(text) {
 const renderedSource = (await Promise.all(sourceFiles.map((file) => readFile(file, 'utf8'))))
   .map((source, index) => visibleText(source, index > 0))
   .join(' ');
+const prohibitedCopy = [
+  [/\b(leverage|seamless|effortless|robust|powerful|intuitive|reimagine|supercharge|unlock|delightful|journey|ecosystem|ai-powered)\b/i, 'banned marketing wording'],
+  [/\bpaper slip\b|\bon the bench\b/i, 'metaphor-only status copy']
+];
 const rows = audit.split('\n').flatMap((line) => {
   const columns = line.split('|').map((column) => column.trim());
   if (columns.length !== 5 || !/^\d+$/.test(columns[2])) return [];
@@ -40,6 +44,9 @@ for (const { text, recorded } of rows) {
   assert.equal(recorded, actual, `Incorrect word count for: ${text}`);
   assert.ok(actual <= 22, `More than 22 words: ${text}`);
   assert.ok(renderedSource.includes(visibleText(text)), `Audited copy is not in the built product or README: ${text}`);
+}
+for (const [expression, description] of prohibitedCopy) {
+  assert.doesNotMatch(renderedSource, expression, `The product contains ${description}.`);
 }
 
 console.log(`Copy audit passed: ${rows.length} visible strings have reproducible whitespace-token counts.`);

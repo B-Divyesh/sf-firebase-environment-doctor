@@ -126,7 +126,6 @@ visitor-facing sentence is 22 words or fewer. No banned marketing wording appear
 | Complete sample output | 3 | Clear result heading |
 | This complete output is generated from firebase-environment-doctor --demo during the site build. | 12 | Claim: `browser-demo-matches-cli` |
 | This Firebase check page was not found. | 7 | Clear 404 h1 |
-| This paper slip is not on the bench. | 8 | Supporting visual copy |
 | Terms for using this Firebase check. | 6 | Clear Terms h1 |
 | Firebase Environment Doctor is released under the MIT License. | 9 | Claim: `license-and-terms` |
 | License terms | 2 | Clear Terms heading |

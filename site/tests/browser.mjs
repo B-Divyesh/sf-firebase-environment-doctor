@@ -18,6 +18,26 @@ async function waitForServer() {
 }
 
 let browser;
+
+async function assertPhoneTouchTargets(page, route) {
+  const undersized = await page.locator('a[href], button').evaluateAll((elements) => elements
+    .filter((element) => {
+      const style = getComputedStyle(element);
+      const box = element.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' && box.width > 0 && box.height > 0;
+    })
+    .map((element) => {
+      const box = element.getBoundingClientRect();
+      return {
+        label: element.getAttribute('aria-label') || element.textContent?.trim() || element.tagName,
+        width: Math.round(box.width * 100) / 100,
+        height: Math.round(box.height * 100) / 100
+      };
+    })
+    .filter(({ width, height }) => width < 44 || height < 44));
+  assert.deepEqual(undersized, [], `${route} has touch targets smaller than 44×44px`);
+}
+
 try {
   await waitForServer();
   browser = await chromium.launch();
@@ -55,13 +75,7 @@ try {
       assert.equal(await networkCommand.evaluate((node) => node.scrollWidth <= node.clientWidth), true);
       assert.equal(await networkCommand.locator('.command-flag').innerText(), '--network');
       assert.notEqual(await networkCommand.evaluate((node) => getComputedStyle(node).outlineColor), 'rgb(23, 36, 59)');
-      const brand = await page.locator('.brand').boundingBox();
-      const footer = await page.locator('.footer-links a').all();
-      assert.ok(brand.width >= 44 && brand.height >= 44);
-      for (const link of footer) {
-        const box = await link.boundingBox();
-        assert.ok(box.width >= 44 && box.height >= 44);
-      }
+      await assertPhoneTouchTargets(page, '/');
     }
     await context.close();
   }
@@ -116,6 +130,14 @@ try {
     assert.equal(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact)).length, 0);
   }
   await legalContext.close();
+
+  const mobileTouchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const mobileTouchPage = await mobileTouchContext.newPage();
+  for (const path of ['/', '/demo/?demo=1', '/privacy/', '/terms/', '/404.html']) {
+    await mobileTouchPage.goto(origin + path, { waitUntil: 'networkidle' });
+    await assertPhoneTouchTargets(mobileTouchPage, path);
+  }
+  await mobileTouchContext.close();
   console.log('Browser smoke: routes, 390px layout, focus, demo controls, console, and axe passed');
 } finally {
   if (browser) await browser.close();

@@ -20,6 +20,25 @@ function verifySecurityHeaders(headers) {
   assert.ok(Number(hsts.match(/max-age=(\d+)/)?.[1]) >= 31_536_000);
 }
 
+async function assertPhoneTouchTargets(page, route) {
+  const undersized = await page.locator('a[href], button').evaluateAll((elements) => elements
+    .filter((element) => {
+      const style = getComputedStyle(element);
+      const box = element.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' && box.width > 0 && box.height > 0;
+    })
+    .map((element) => {
+      const box = element.getBoundingClientRect();
+      return {
+        label: element.getAttribute('aria-label') || element.textContent?.trim() || element.tagName,
+        width: Math.round(box.width * 100) / 100,
+        height: Math.round(box.height * 100) / 100
+      };
+    })
+    .filter(({ width, height }) => width < 44 || height < 44));
+  assert.deepEqual(undersized, [], `${route} has touch targets smaller than 44×44px`);
+}
+
 for (const path of ['/', '/demo/', '/privacy/', '/terms/']) {
   const response = await fetch(`${origin}${path}?${cacheBust}`, { cache: 'no-store' });
   assert.equal(response.status, 200, path);
@@ -86,12 +105,7 @@ try {
       assert.equal(await networkCommand.evaluate((node) => node.scrollWidth <= node.clientWidth), true);
       assert.equal(await networkCommand.locator('.command-flag').innerText(), '--network');
       assert.notEqual(await networkCommand.evaluate((node) => getComputedStyle(node).outlineColor), 'rgb(23, 36, 59)');
-      const brand = await page.locator('.brand').boundingBox();
-      assert.ok(brand.width >= 44 && brand.height >= 44);
-      for (const link of await page.locator('.footer-links a').all()) {
-        const box = await link.boundingBox();
-        assert.ok(box.width >= 44 && box.height >= 44);
-      }
+      await assertPhoneTouchTargets(page, '/');
     }
     await context.close();
   }
@@ -150,6 +164,15 @@ try {
     assert.deepEqual(seriousShell, [], `${path}: ${seriousShell.map((item) => item.id).join(', ')}`);
   }
   await shellContext.close();
+
+  const mobileTouchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const mobileTouchPage = await mobileTouchContext.newPage();
+  for (const path of ['/', '/demo/?demo=1', '/privacy/', '/terms/', '/not-a-real-route']) {
+    const response = await mobileTouchPage.goto(`${origin}${path}${path.includes('?') ? '&' : '?'}${cacheBust}`, { waitUntil: 'networkidle' });
+    assert.equal(response?.status(), path === '/not-a-real-route' ? 404 : 200, path);
+    await assertPhoneTouchTargets(mobileTouchPage, path);
+  }
+  await mobileTouchContext.close();
 } finally { await browser.close(); }
 
 console.log(`Live routes, 404, metadata, privacy, mobile, demo, and axe passed: ${origin}`);

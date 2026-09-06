@@ -74,10 +74,17 @@ if [ "$1" = "login:list" ]; then echo '{"result":[{"user":{"email":"developer@ex
 echo '{"error":{"message":"Authentication Error: TOP_SECRET_SENTINEL"}}' >&2
 exit 1
 `, async ({ env }) => {
-    const result = command(binary, ['--root', fixture('wrong-project'), '--network', '--json'], { env });
-    expectStatus(result, 1, 'network credential suppression check');
-    assert.doesNotMatch(result.stdout, /TOP_SECRET_SENTINEL|"token"/);
-    assert.match(result.stdout, /auth_invalid/);
+    const card = command(binary, ['--root', fixture('wrong-project'), '--network'], { env });
+    const json = command(binary, ['--root', fixture('wrong-project'), '--network', '--json'], { env });
+
+    expectStatus(card, 1, 'text-card credential suppression check');
+    expectStatus(json, 1, 'JSON credential suppression check');
+    for (const [format, result] of [['text card', card], ['JSON', json]]) {
+      assert.doesNotMatch(result.stdout, /TOP_SECRET_SENTINEL|"token"/, `${format} stdout exposed credential data`);
+      assert.doesNotMatch(result.stderr, /TOP_SECRET_SENTINEL|"token"/, `${format} stderr exposed credential data`);
+    }
+    assert.match(card.stdout, /Firebase sign-in needs attention/);
+    assert.match(json.stdout, /auth_invalid/);
   });
 });
 

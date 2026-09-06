@@ -48,6 +48,8 @@ test('demo, sitemap, and designed 404 are emitted', async () => {
   assert.equal(config.responseOverrides?.['404']?.statusCode, 404);
   const notFound = await readFile(new URL('404.html', output), 'utf8');
   assert.match(notFound, /This Firebase check page was not found/);
+  assert.match(notFound, /The page address does not match a Firebase project check page\./);
+  assert.doesNotMatch(notFound, /paper slip|on the bench/i);
 });
 
 test('landing explains the three-step Firebase project workflow', async () => {

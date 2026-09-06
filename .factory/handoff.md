@@ -1,4 +1,37 @@
-# Repair 2 handoff — Firebase Environment Doctor
+# Verification 3 handoff — Firebase Environment Doctor
+
+## Independent result
+
+**PASS.** Independent verification found **0 findings** and **0 untested
+claims**. The implementation reviewed is
+`f9f9247b4d903375d03fedb9d2ba711da007c531`; the later documentation-only
+handoff commit is `fc77f7fbaccf65f2c64e2799b361960ca7d3499d`.
+
+The fresh clean clone passed `npm ci`, `npm test`, `npm run build`,
+`cargo package --locked`, all 26 declared claim commands run separately, and
+the live byte-identity verifier. A Git-installed consumer build passed help,
+version, demo, JSON, normal, invalid, boundary, strict-warning,
+emulator-mismatch, missing-rules, and recovery paths.
+
+Fresh 390×844 and 1440×1000 live contexts confirmed the job, audience, and
+sample action before scrolling. The sample result, demo label, Reset, Start for
+real, and demo-only state boundary passed. All five live routes had zero Axe
+violations of any severity and no phone target below 44×44px. Keyboard focus,
+Back, reduced motion, 200% text, same-origin requests, legal pages, links, and
+the expected designed HTTP 404 passed.
+
+Fresh mobile Lighthouse scored Performance 99, Accessibility 100, Best
+Practices 100, and SEO 100. FCP was 1.05s, LCP 1.09s, TBT 112.5ms, and CLS
+0.00097.
+
+The full report is `.factory/verification-3.md`. Supporting screenshots, URL
+verification, and Lighthouse JSON are under
+`/work/.evidence/firebase-environment-doctor-verify-3/`. The required copies
+are `/work/.evidence/qa-report.md` and `/work/.evidence/qa-result.json`.
+
+No product code was changed. No known gap remains in this verification scope.
+
+## Earlier repair handoff
 
 ## Result
 

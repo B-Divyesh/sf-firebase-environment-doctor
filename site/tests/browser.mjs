@@ -38,6 +38,23 @@ async function assertPhoneTouchTargets(page, route) {
   assert.deepEqual(undersized, [], `${route} has touch targets smaller than 44×44px`);
 }
 
+async function assertPhoneHeaderTargetSpacing(page, route) {
+  const targets = await page.locator('header a').evaluateAll((elements) => elements.map((element) => {
+    const box = element.getBoundingClientRect();
+    return {
+      label: element.getAttribute('aria-label') || element.textContent?.trim() || element.tagName,
+      left: box.left,
+      right: box.right
+    };
+  }));
+  for (let index = 1; index < targets.length; index += 1) {
+    const previous = targets[index - 1];
+    const current = targets[index];
+    const gap = current.left - previous.right;
+    assert.ok(gap >= 8, `${route} header targets ${previous.label} and ${current.label} have a ${gap}px gap`);
+  }
+}
+
 try {
   await waitForServer();
   browser = await chromium.launch();
@@ -76,6 +93,7 @@ try {
       assert.equal(await networkCommand.locator('.command-flag').innerText(), '--network');
       assert.notEqual(await networkCommand.evaluate((node) => getComputedStyle(node).outlineColor), 'rgb(23, 36, 59)');
       await assertPhoneTouchTargets(page, '/');
+      await assertPhoneHeaderTargetSpacing(page, '/');
     }
     await context.close();
   }
@@ -136,6 +154,7 @@ try {
   for (const path of ['/', '/demo/?demo=1', '/privacy/', '/terms/', '/404.html']) {
     await mobileTouchPage.goto(origin + path, { waitUntil: 'networkidle' });
     await assertPhoneTouchTargets(mobileTouchPage, path);
+    await assertPhoneHeaderTargetSpacing(mobileTouchPage, path);
   }
   await mobileTouchContext.close();
   console.log('Browser smoke: routes, 390px layout, focus, demo controls, console, and axe passed');

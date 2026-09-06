@@ -8,7 +8,9 @@ repaired, committed, pushed, and deployed to
 
 **Implementation SHA:** `f9f9247b4d903375d03fedb9d2ba711da007c531`
 
-The documentation handoff is committed separately after this implementation.
+**Documentation evidence SHA:** `f40c5e95f7d1506ac82084598e935f78b1892927`
+
+The documentation evidence is committed separately after the implementation.
 There is no paid offer: the researched product remains a free local CLI, so no
 billing metadata is needed.
 
